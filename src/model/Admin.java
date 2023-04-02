@@ -6,7 +6,7 @@ public class Admin extends User {
 			super(id,name,firstName,mail,password);
 		}
 		
-				
+				// Je suis le goat
 	
 
 }
