@@ -261,7 +261,6 @@ public class AdminDAO extends ConnectionDAO {
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
 				
-				
 				returnValue.add(new Admin(rs.getInt("id"),
 					       rs.getString("name"),
 					       rs.getString("firstName"),

@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import dao.AdminDAO;
+import model.Admin;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -66,8 +70,21 @@ public class AdminGUI {
 		JButton btnNewButton = new JButton("Se connecter");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
+				String password = new String(passwordField.getPassword());
+				AdminDAO adminDAO = new AdminDAO();
+				Admin sg = adminDAO.get( Integer.parseInt(textField.getText()), password);
+
+				System.out.println("User"+textField.getText());
+				System.out.println("MDP"+password); 		
 				frame.dispose();
 				AcceuilAdmin GG = new AcceuilAdmin();
+				
+			}
+
+			private void displayAdmin(int id) {
+				// TODO Auto-generated method stub
 				
 			}
 		});
