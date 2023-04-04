@@ -1,34 +1,31 @@
 package dao;
 import java.sql.*;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
 import model.*;
 
 /**
- * Classe d'acces aux donnees contenues dans la table student
+ * Classe d'acces aux donnees contenues dans la table group
  * 
  * @author ESIGELEC - TIC Department
  * @version 2.0
  * */
-public class StudentDAO extends ConnectionDAO {
+public class GroupDAO extends ConnectionDAO {
 	/**
 	 * Constructor
 	 * 
 	 */
-	public StudentDAO() {
+	public GroupDAO() {
 		super();
 	}
 
 	/**
-	 * Permet d'ajouter un eleve dans la table student.
+	 * Permet d'ajouter un group dans la table group.
 	 * Le mode est auto-commit par defaut : chaque insertion est validee
 	 * 
-	 * @param student le eleve a ajouter
+	 * @param group le group a ajouter
 	 * @return retourne le nombre de lignes ajoutees dans la table
 	 */
-	public int add(Student student) {
+	public int add(Group group) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -42,33 +39,26 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			if(student.getSector().equals("Apprenti")) {
-				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, idsector) VALUES(seq_student.nextVal, ?, ?, ?, ?, ?, 2)");
-				
-			}
-			else if(student.getSector().equals("Classique")) {
-				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, idsector) VALUES(seq_student.nextVal, ?, ?, ?, ?, ?, 1)");
-
-			}
-			ps.setString(1, student.getName());
-			ps.setString(2, student.getFirstName());
-			ps.setString(3, student.getMail());
-			ps.setString(4, student.getPassword());
-			ps.setInt(5, student.getGroup());
-
+			
+			
+		
+			ps = con.prepareStatement("INSERT INTO gestionnaire (idgestionnaire, name, fistName, mail, password) VALUES(?, ?, ?, ?, ?)");
+			
+			
+			ps.setInt(1, group.getGroup_number());
+			ps.setInt(2, group.getCapacity());
+		
+		
 			
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
-				
+
 		} catch (Exception e) {
 			if (e.getMessage().contains("ORA-00001"))
-				System.out.println("Cet identifiant de eleve existe déjà. Ajout impossible !");
-			else {
+				System.out.println("Cet identifiant de group existe déjà. Ajout impossible !");
+			else
 				e.printStackTrace();
-				
-			}
-				
 		} finally {
 			// fermeture du preparedStatement et de la connexion
 			try {
@@ -88,13 +78,13 @@ public class StudentDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de modifier un eleve dans la table student.
+	 * Permet de modifier un group dans la table group.
 	 * Le mode est auto-commit par defaut : chaque modification est validee
 	 * 
-	 * @param student le eleve a modifier
+	 * @param group le group a modifier
 	 * @return retourne le nombre de lignes modifiees dans la table
 	 */
-	public int update(Student student) {
+	public int update(Group group) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -107,13 +97,9 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE student set Lastname = ?, firstName = ?, mail = ?, mdp= ?, groupe_number= ? WHERE idstudent = ?");
-			ps.setString(1, student.getName());
-			ps.setString(2, student.getFirstName());
-			ps.setString(3, student.getMail());
-			ps.setString(4, student.getPassword());
-			ps.setInt(5, student.getGroup());
-			ps.setInt(6, student.getId());
+			ps = con.prepareStatement("UPDATE group set name = ?, firstName = ?, mail = ?, password= ? WHERE id = ?");
+			ps.setInt(1, group.getGroup_number());
+			ps.setInt(2, group.getCapacity());
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -139,14 +125,14 @@ public class StudentDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de supprimer un eleve par id dans la table student.
+	 * Permet de supprimer un group par id dans la table group.
 	 * Si ce dernier possede des articles, la suppression n'a pas lieu.
 	 * Le mode est auto-commit par defaut : chaque suppression est validee
 	 * 
-	 * @param id l'id du student à supprimer
+	 * @param id l'id du group à supprimer
 	 * @return retourne le nombre de lignes supprimees dans la table
 	 */
-	public int delete(String lastname, String firstname) {
+	public int delete(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -158,17 +144,16 @@ public class StudentDAO extends ConnectionDAO {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
-			// le getter permet de recuperer la valeur de l'ID du eleve
-			ps = con.prepareStatement("DELETE FROM student WHERE lastname = ? AND firstname = ?");
-			ps.setString(1, lastname);
-			ps.setString(2, firstname);
+			// le getter permet de recuperer la valeur de l'ID du group
+			ps = con.prepareStatement("DELETE FROM group WHERE id = ?");
+			ps.setInt(1, id);
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
 
 		} catch (Exception e) {
 			if (e.getMessage().contains("ORA-02292"))
-				System.out.println("Ce eleve possede des articles, suppression impossible !"
+				System.out.println("Ce group possede des articles, suppression impossible !"
 						         + " Supprimer d'abord ses articles ou utiiser la méthode de suppression avec articles.");
 			else
 				e.printStackTrace();
@@ -192,46 +177,45 @@ public class StudentDAO extends ConnectionDAO {
 
 
 	/**
-	 * Permet de recuperer un eleve a partir de sa reference
+	 * Permet de recuperer un group a partir de sa reference
 	 * 
-	 * @param reference la reference du eleve a recuperer
-	 * @return le eleve trouve;
-	 * 			null si aucun eleve ne correspond a cette reference
+	 * @param reference la reference du group a recuperer
+	 * @return le group trouve;
+	 * 			null si aucun group ne correspond a cette reference
 	 */
-	public Student get(int id, String mdp) {
+	public Group get(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Student returnValue = null;
-		String sector= "Sector undefined";
+		Group returnValue = null;
+		
 
 		// connexion a la base de donnees
 		try {
 
-			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM student WHERE id = ? AND mdp= ?");
+			con = DriverManager.getConnection(URL,LOGIN,PASS);
+			if(con!=null) {
+				System.out.println("CONNECTION SUCCESSED");
+			}
+			
+			else
+				System.out.println("CONNECTION FAILED");
+			ps = con.prepareStatement("SELECT * FROM gestionnaire WHERE groupe_number= ?");
 			ps.setInt(1, id);
-			ps.setString(2, mdp);
+			
+
 
 			// on execute la requete
 			// rs contient un pointeur situe juste avant la premiere ligne retournee
 			rs = ps.executeQuery();
+			
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
-				returnValue = new Student(rs.getInt("id"),
-									       rs.getString("Lastname"),
-									       rs.getString("firstName"),
-									       rs.getString("mail"),
-									       rs.getString("mdp"),
-									       rs.getInt("group_number"),
-									       sector);
+				returnValue = new Group(rs.getInt("GROUPE_NUMBER"),	     
+									       rs.getInt("CAPACIT"));
+				returnValue.display();
 			}
+			
 		} catch (Exception ee) {
 			ee.printStackTrace();
 		} finally {
@@ -259,39 +243,28 @@ public class StudentDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de recuperer tous les eleves stockes dans la table eleve
+	 * Permet de recuperer tous les groups stockes dans la table group
 	 * 
-	 * @return une ArrayList de eleve
+	 * @return une ArrayList de group
 	 */
-	public ArrayList<Student> getList() {
+	public ArrayList<Group> getList() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ArrayList<Student> returnValue = new ArrayList<Student>();
-		String sector= "Sector undefined";
-
+		ArrayList<Group> returnValue = new ArrayList<Group>();
+		
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM student ORDER BY id");
+			ps = con.prepareStatement("SELECT * FROM groupe ORDER BY groupe_number");
 
 			// on execute la requete
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
-				returnValue.add(new Student(rs.getInt("id"),
-					       rs.getString("Lastname"),
-					       rs.getString("firstName"),
-					       rs.getString("mail"),
-					       rs.getString("mdp"),
-					       rs.getInt("group_number"),
-					       sector));
+				
+				returnValue.add(new Group(rs.getInt("groupe_number"),	     
+					       rs.getInt("CAPACIT ")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -327,18 +300,9 @@ public class StudentDAO extends ConnectionDAO {
 	
 	
 	 public static void main(String[] args) throws SQLException {
-		int returnValue;
-		StudentDAO studentDAO = new StudentDAO();
-		
-	
-		
-		// test de la methode getList
-		ArrayList<Student> list = studentDAO.getList();
-		for (Student s : list) {
-			// appel explicite de la methode toString de la classe Object (a privilegier)
-			System.out.println(s.toString());
-		}
-		System.out.println();
-	
-	}
-}
+	//	int returnValue;
+		GroupDAO groupDAO = new GroupDAO();
+			groupDAO.getList().get(0).display();
+			
+			}
+	 }

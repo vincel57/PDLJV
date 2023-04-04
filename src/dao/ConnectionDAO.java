@@ -13,12 +13,12 @@ public class ConnectionDAO {
 	 * Parametres de connexion a la base de donnees oracle
 	 * URL, LOGIN et PASS sont des constantes
 	 */
-	static String UrlMarvine = "jdbc:oracle:thin:@//srvoracledb.intranet.int:1521/orcl.intranet.int" ;
+	static String UrlMarvine = "jdbc:oracle:thin:@//oracle.esigelec.fr:1521/orcl.intranet.int" ;
 	static String LogMarvine = "C##BDD2_18";
 	static String PassMarvine = "BDD218";
-	static String UrlJarfino = "jdbc:oracle:thin:@//srvoracledb.intranet.int:1521/orcl.intranet.int" ;
-	static String LogJarfino = "C##BDD2_";
-	static String PassJarfino = "BDD2";
+	static String UrlJarfino = "jdbc:oracle:thin:@//oracle.esigelec.fr:1521/orcl.intranet.int" ;
+	static String LogJarfino = "C##BDD2_15";
+	static String PassJarfino = "BDD215";
 	// � utiliser si vous �tes sur une machine personnelle :
 	//final static String URL   = "jdbc:oracle:thin:@oracle.esigelec.fr:1521:orcl";
 	
@@ -27,7 +27,7 @@ public class ConnectionDAO {
 	final static String LOGIN = LogMarvine;   // remplacer les ********. Exemple C##BDD1_1
 	final static String PASS  = PassMarvine;   // remplacer les ********. Exemple BDD11
 	
-	/**
+	/**n  
 	 * Constructor
 	 * 
 	 */

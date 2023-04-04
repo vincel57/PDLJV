@@ -71,16 +71,20 @@ public class AdminGUI {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
 				String password = new String(passwordField.getPassword());
 				AdminDAO adminDAO = new AdminDAO();
 				Admin sg = adminDAO.get( Integer.parseInt(textField.getText()), password);
-
-				System.out.println("User"+textField.getText());
-				System.out.println("MDP"+password); 		
-				frame.dispose();
-				AcceuilAdmin GG = new AcceuilAdmin();
-				
+				if(sg == null) {
+					JOptionPane.showMessageDialog(new JFrame(), "Identifiant ou mot de passe incorect", "Dialog",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					System.out.println("User"+textField.getText());
+					System.out.println("MDP"+password); 		
+					frame.dispose();
+					AcceuilAdmin GG = new AcceuilAdmin();
+				}
 			}
 
 			private void displayAdmin(int id) {
@@ -117,19 +121,6 @@ public class AdminGUI {
 		
 	}
 	
-	private void MenuAdmin() {
-		frame2 = new JFrame();
-		frame2.setBounds(100, 100, 450, 300);
-		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame2 = new JFrame();
-		frame2.setTitle("MENU ADMIN");
-		frame2.setBounds(100, 100, 515, 335);
-		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame2.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		JPanel choicePnl = new JPanel();
-		frame.getContentPane().add(choicePnl);
-		choicePnl.setLayout(null);
-		
-	}
+	
 	
 }

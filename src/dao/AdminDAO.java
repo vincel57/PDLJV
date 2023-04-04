@@ -42,7 +42,7 @@ public class AdminDAO extends ConnectionDAO {
 			
 			
 		
-			ps = con.prepareStatement("INSERT INTO admin(id, name, fistName, mail, password) VALUES(?, ?, ?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO gestionnaire (idgestionnaire, name, fistName, mail, password) VALUES(?, ?, ?, ?, ?)");
 			
 			ps.setInt(1, admin.getId());
 			ps.setString(2, admin.getName());
@@ -197,23 +197,33 @@ public class AdminDAO extends ConnectionDAO {
 		// connexion a la base de donnees
 		try {
 
-			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM admin WHERE id = ? AND password= ?");
+			con = DriverManager.getConnection(URL,LOGIN,PASS);
+			if(con!=null) {
+				System.out.println("CONNECTION SUCCESSED");
+			}
+			
+			else
+				System.out.println("CONNECTION FAILED");
+			ps = con.prepareStatement("SELECT * FROM gestionnaire WHERE idgestionnaire= ? AND mdp= ?");
 			ps.setInt(1, id);
 			ps.setString(2, password);
+
 
 			// on execute la requete
 			// rs contient un pointeur situe juste avant la premiere ligne retournee
 			rs = ps.executeQuery();
+			
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
-				
-				returnValue = new Admin(rs.getInt("id"),
-									       rs.getString("name"),
-									       rs.getString("firstName"),
-									       rs.getString("mail"),
-									       rs.getString("password"));
+				System.out.println("ID"+rs.getInt("IDGESTIONNAIRE"));
+				returnValue = new Admin(rs.getInt("IDGESTIONNAIRE"),
+									       rs.getString("LASTNAME"),
+									       rs.getString("FIRSTNAME"),
+									       rs.getString("MAIL"),
+									       rs.getString("MDP"));
+				returnValue.display();
 			}
+			
 		} catch (Exception ee) {
 			ee.printStackTrace();
 		} finally {
@@ -299,46 +309,10 @@ public class AdminDAO extends ConnectionDAO {
 	 * @throws SQLException si une erreur se produit lors de la communication avec la BDD
 	 */
 	
-	/*
+	
 	 public static void main(String[] args) throws SQLException {
 		int returnValue;
 		AdminDAO adminDAO = new AdminDAO();
-		// Ce test va utiliser directement votre BDD, on essaie d'éviter les collisions avec vos données en prenant de grands ID
-		int[] ids = {424242, 424243, 424244};
-		// test du constructeur
-		Admin s1 = new Admin(ids[0], "Mon admin principal", "Rouen", "monadminprincipal@mail.com");
-		Admin s2 = new Admin(ids[1], "Mon admin secondaire", "Le Havre", "monadminsecondaire@mail.com");
-		Admin s3 = new Admin(ids[2], "Mon admin de secours", "Paris", "monadminsecours@mail.com");
-		// test de la methode add
-		returnValue = adminDAO.add(s1);
-		System.out.println(returnValue + " admin ajoute");
-		returnValue = adminDAO.add(s2);
-		System.out.println(returnValue + " admin ajoute");
-		returnValue = adminDAO.add(s3);
-		System.out.println(returnValue + " admin ajoute");
-		System.out.println();
-		
-		// test de la methode get
-		Admin sg = adminDAO.get(1);
-		// appel implicite de la methode toString de la classe Object (a eviter)
-		System.out.println(sg);
-		System.out.println();
-		
-		// test de la methode getList
-		ArrayList<Admin> list = adminDAO.getList();
-		for (Admin s : list) {
-			// appel explicite de la methode toString de la classe Object (a privilegier)
-			System.out.println(s.toString());
-		}
-		System.out.println();
-		// test de la methode delete
-		// On supprime les 3 articles qu'on a créé
-		returnValue = 0;
-		for (int id : ids) {
-//			returnValue = adminDAO.delete(id);
-			System.out.println(returnValue + " admin supprime");
-		}
-		
-		System.out.println();
-	}
-*/}
+			adminDAO.get(1, "gaston1234");
+			}
+	 }
