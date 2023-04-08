@@ -11,16 +11,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import dao.GroupDAO;
+import dao.StudentDAO;
+import model.Group;
+import model.Student;
+import javax.swing.JList;
+
 public class GestionELGUI {
 
 	private JFrame frame;
-	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -80,7 +86,7 @@ public class GestionELGUI {
 		btnNewButton_2_1.setFont(new Font("Verdana Pro Cond", Font.PLAIN, 11));
 		btnNewButton_2_1.setForeground(new Color(178, 34, 34));
 		btnNewButton_2_1.setBackground(new Color(135, 206, 250));
-		btnNewButton_2_1.setBounds(643, 430, 89, 23);
+		btnNewButton_2_1.setBounds(643, 419, 89, 23);
 		frame.getContentPane().add(btnNewButton_2_1);
 		
 		
@@ -104,41 +110,26 @@ public class GestionELGUI {
 		lblNewLabel_1.setBounds(254, 11, 208, 52);
 		frame.getContentPane().add(lblNewLabel_1);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 63, 623, 418);
-		frame.getContentPane().add(scrollPane);
+			StudentDAO studentDAO = new StudentDAO();
+		ArrayList<Student> liststudent = studentDAO.getList();
 		
-		table = new JTable();
-		table.setBorder(new EmptyBorder(1, 1, 1, 1));
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"ID", "Name", "Name", "FirstName", "Email", "Year", "sector"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class, Integer.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false, true
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
+		JButton btnNewButton_2_1_2 = new JButton("RETOUR");
+		btnNewButton_2_1_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
-		scrollPane.setViewportView(table);
+		btnNewButton_2_1_2.setForeground(new Color(178, 34, 34));
+		btnNewButton_2_1_2.setFont(new Font("Verdana Pro Cond Black", Font.PLAIN, 11));
+		btnNewButton_2_1_2.setBackground(new Color(135, 206, 250));
+		btnNewButton_2_1_2.setBounds(10, 11, 89, 23);
+		frame.getContentPane().add(btnNewButton_2_1_2);
+		
+		JList list = new JList();
+		list.setBounds(32, 83, 531, 315);
+		frame.getContentPane().add(list);
+		
+		
 		
 		
 		

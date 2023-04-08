@@ -273,24 +273,19 @@ public class StudentDAO extends ConnectionDAO {
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM student ORDER BY id");
+			ps = con.prepareStatement("SELECT * FROM student");
 
 			// on execute la requete
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
-				returnValue.add(new Student(rs.getInt("id"),
+				
+				returnValue.add(new Student(rs.getInt("idstudent"),
 					       rs.getString("Lastname"),
 					       rs.getString("firstName"),
 					       rs.getString("mail"),
 					       rs.getString("mdp"),
-					       rs.getInt("group_number"),
+					       rs.getInt("groupe_number"),
 					       sector));
 			}
 		} catch (Exception ee) {
