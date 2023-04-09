@@ -127,7 +127,8 @@ public class AjouterELGUI {
 					JOptionPane.showMessageDialog(null, "Enregistrement raté");
 				}
 				
-			
+				frame.dispose();
+				GestionELGUI GD = new GestionELGUI(); 
 
 			}
 		});

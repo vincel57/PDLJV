@@ -115,7 +115,7 @@ public class GestionELGUI {
 		btnNewButton_2_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				SupprimerELGUI gj = new SupprimerELGUI();
+				SupprimerELGUI Nes = new SupprimerELGUI( listStudent.get(table.getSelectedRow()));
 			}
 		});
 		btnNewButton_2_1.setFont(new Font("Verdana Pro Cond", Font.PLAIN, 11));
@@ -147,10 +147,12 @@ public class GestionELGUI {
 		
 		
 		
+		
 		JButton btnNewButton_2_1_2 = new JButton("RETOUR");
 		btnNewButton_2_1_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				frame.dispose();
+				AcceuilAdmin GG = new AcceuilAdmin();
 			}
 		});
 		
