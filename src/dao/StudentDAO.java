@@ -279,6 +279,12 @@ public class StudentDAO extends ConnectionDAO {
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
+				if(rs.getInt("idsector")==2) {
+					sector = "Apprenti";
+				}
+				else if(rs.getInt("idsector")==1) {
+					sector = "Classique";
+				}
 				
 				returnValue.add(new Student(rs.getInt("idstudent"),
 					       rs.getString("Lastname"),

@@ -212,7 +212,7 @@ public class GroupDAO extends ConnectionDAO {
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
 				returnValue = new Group(rs.getInt("GROUPE_NUMBER"),	     
-									       rs.getInt("CAPACIT"));
+									       rs.getInt("CAPACITY"));
 				returnValue.display();
 			}
 			
@@ -264,7 +264,7 @@ public class GroupDAO extends ConnectionDAO {
 			while (rs.next()) {
 				
 				returnValue.add(new Group(rs.getInt("groupe_number"),	     
-					       rs.getInt("CAPACIT ")));
+					       rs.getInt("CAPACITY")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

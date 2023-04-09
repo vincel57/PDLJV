@@ -79,7 +79,8 @@ public class SupprimerELGUI {
 				else {
 					JOptionPane.showMessageDialog(null, "Suppression raté");
 				}
-				
+				frame.dispose();
+				GestionELGUI GD = new GestionELGUI(); 
 			}
 		});
 		btnNewButton.setForeground(new Color(139, 0, 0));
