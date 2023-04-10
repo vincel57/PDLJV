@@ -119,16 +119,22 @@ public class AjouterELGUI {
 				student.setPassword(sb.toString());
 				student.display();
 				StudentDAO studentDAO = new StudentDAO();
-				int returnValue=studentDAO.add(student); 
-				if(returnValue!=0) {
-					JOptionPane.showMessageDialog(null, "Enregistrement reussi");
+				if(student.getName().length() == 0 || student.getFirstName().length() == 0) {
+					JOptionPane.showMessageDialog(null, " Entrez le nom et le prénom");
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Enregistrement raté");
+					int returnValue=studentDAO.add(student); 
+					if(returnValue!=0) {
+						JOptionPane.showMessageDialog(null, "Enregistrement reussi");
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Enregistrement raté");
+					}
+					
+					frame.dispose();
+					GestionELGUI GD = new GestionELGUI(); 
 				}
 				
-				frame.dispose();
-				GestionELGUI GD = new GestionELGUI(); 
 
 			}
 		});

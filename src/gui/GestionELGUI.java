@@ -23,6 +23,7 @@ import dao.StudentDAO;
 import model.Group;
 import model.Student;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 public class GestionELGUI {
 
@@ -114,8 +115,14 @@ public class GestionELGUI {
 		JButton btnNewButton_2_1 = new JButton("SUPPRIMER");
 		btnNewButton_2_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				SupprimerELGUI Nes = new SupprimerELGUI( listStudent.get(table.getSelectedRow()));
+				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listStudent.size()) {
+					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un élève");
+				}
+				else {
+					frame.dispose();
+					SupprimerELGUI Nes = new SupprimerELGUI( listStudent.get(table.getSelectedRow()));
+				}
+				
 			}
 		});
 		btnNewButton_2_1.setFont(new Font("Verdana Pro Cond", Font.PLAIN, 11));
@@ -128,8 +135,15 @@ public class GestionELGUI {
 		JButton btnNewButton_2_1_1 = new JButton("MODIFIER");
 		btnNewButton_2_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				ModifieELGUI gh = new ModifieELGUI(	listStudent.get(table.getSelectedRow()));
+				System.out.println(table.getSelectedRow());
+				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listStudent.size()) {
+					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un élève");
+				}
+				else {
+					frame.dispose();
+					ModifieELGUI gh = new ModifieELGUI(	listStudent.get(table.getSelectedRow()));
+				}
+			
 			}
 			
 		});

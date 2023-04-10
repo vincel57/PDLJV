@@ -108,15 +108,22 @@ public class ModifieELGUI {
 			
 				student.display();
 				StudentDAO studentDAO = new StudentDAO();
-				int returnValue=studentDAO.update(student); 
-				if(returnValue!=0) {
-					JOptionPane.showMessageDialog(null, "Modification reussi");
+				if(student.getName().length() == 0 || student.getFirstName().length() == 0) {
+					JOptionPane.showMessageDialog(null, " Entrez le nom et le prénom");
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Modification raté");
+					int returnValue=studentDAO.update(student); 
+					if(returnValue!=0) {
+						JOptionPane.showMessageDialog(null, "Modification reussi");
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Modification raté");
+					}
+					frame.dispose();
+					GestionELGUI GD = new GestionELGUI();
 				}
-				frame.dispose();
-				GestionELGUI GD = new GestionELGUI();
+				
+				
 			}
 		});
 		Update.setBackground(new Color(224, 255, 255));

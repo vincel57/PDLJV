@@ -146,7 +146,7 @@ public class StudentDAO extends ConnectionDAO {
 	 * @param id l'id du student à supprimer
 	 * @return retourne le nombre de lignes supprimees dans la table
 	 */
-	public int delete(String lastname, String firstname) {
+	public int delete(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -159,9 +159,9 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
 			// le getter permet de recuperer la valeur de l'ID du eleve
-			ps = con.prepareStatement("DELETE FROM student WHERE lastname = ? AND firstname = ?");
-			ps.setString(1, lastname);
-			ps.setString(2, firstname);
+			ps = con.prepareStatement("DELETE FROM student WHERE idstudent = ?");
+			ps.setInt(1, id);
+			
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();

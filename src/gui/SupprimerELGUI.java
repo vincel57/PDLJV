@@ -69,7 +69,7 @@ public class SupprimerELGUI {
 			public void actionPerformed(ActionEvent e) {
 				
 				StudentDAO studentDAO = new StudentDAO();
-				int returnValue=studentDAO.delete(student.getName(), student.getFirstName()); 
+				int returnValue=studentDAO.delete(student.getId()); 
 				if(returnValue!=0) {
 					JOptionPane.showMessageDialog(null, "Suppression reussi");
 				}
