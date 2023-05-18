@@ -1,33 +1,25 @@
 package gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 
-import dao.GroupDAO;
-import dao.StudentDAO;
-import dao.AdminDAO;
-import model.Group;
-import model.Student;
+import dao.TeacherDAO;
 import model.Admin;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
+import model.Teacher;
 
-public class GestionELGUI {
+public class GestionENSGUI {
 
 	private JFrame frame;
 	private JTable table;
@@ -40,7 +32,7 @@ public class GestionELGUI {
 			public void run() {
 				try {
 					Admin ad = new Admin(0,"0","0","0","0");
-					GestionELGUI window = new GestionELGUI(ad);
+					GestionENSGUI window = new GestionENSGUI(ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,10 +44,9 @@ public class GestionELGUI {
 	/**
 	 * Create the application.
 	 */
-	public GestionELGUI(Admin ad) {
+	public GestionENSGUI(Admin ad) {
 		initialize(ad);
 		frame.setVisible(true);
-
 	}
 
 	/**
@@ -73,8 +64,9 @@ public class GestionELGUI {
 			public void actionPerformed(ActionEvent e) {
 				
 				frame.dispose();
-				AjouterELGUI gp = new AjouterELGUI(ad);
+				AjouterENSGUI gs = new AjouterENSGUI(ad); 
 			}
+		
 		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(21, 59, 612, 422);
@@ -84,29 +76,29 @@ public class GestionELGUI {
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Lastname", "Firstname", "Email", "Group", "Sector"
+				"ID", "Lastname", "Firstname", "Email", "Tel"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, Integer.class, String.class
+				Integer.class, String.class, String.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				true, false, false, true, false, false
+				true, false, false, true, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
-		}); 
+		});
 		scrollPane.setViewportView(table);
 		
 		DefaultTableModel model =  (DefaultTableModel)table.getModel();
-		StudentDAO studentDAO = new StudentDAO();
-		ArrayList<Student> listStudent = studentDAO.getList();
-		for (int i = 0; i < listStudent.size(); i++) {
-				model.addRow(new Object [] {listStudent.get(i).getId(), listStudent.get(i).getName(), listStudent.get(i).getFirstName(), listStudent.get(i).getMail(), listStudent.get(i).getGroup(), listStudent.get(i).getSector()});
+		TeacherDAO studentDAO = new TeacherDAO();
+		ArrayList<Teacher> listTeacher = studentDAO.getList();
+		for (int i = 0; i < listTeacher.size(); i++) {
+				model.addRow(new Object [] {listTeacher.get(i).getId(), listTeacher.get(i).getName(), listTeacher.get(i).getFirstName(), listTeacher.get(i).getMail(), listTeacher.get(i).getPhoneNumber()});
 				
 		} 
 		
@@ -118,17 +110,17 @@ public class GestionELGUI {
 		JButton btnNewButton_2_1 = new JButton("SUPPRIMER");
 		btnNewButton_2_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listStudent.size()) {
+				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listTeacher.size()) {
 					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un élève");
 				}
 				else {
 					frame.dispose();
-					SupprimerELGUI Nes = new SupprimerELGUI(listStudent.get(table.getSelectedRow()), ad);
+					SupprimerENSGUI Nes = new SupprimerENSGUI( listTeacher.get(table.getSelectedRow()), ad);
 				}
 				
 			}
 		});
-		btnNewButton_2_1.setFont(new Font("Verdana Pro Cond", Font.BOLD, 11));
+		btnNewButton_2_1.setFont(new Font("Verdana Pro Cond", Font.PLAIN, 11));
 		btnNewButton_2_1.setForeground(new Color(178, 34, 34));
 		btnNewButton_2_1.setBackground(new Color(135, 206, 250));
 		btnNewButton_2_1.setBounds(643, 419, 89, 23);
@@ -139,14 +131,14 @@ public class GestionELGUI {
 		btnNewButton_2_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(table.getSelectedRow());
-				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listStudent.size()) {
+				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listTeacher.size()) {
 					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un élève");
 				}
 				else {
 					frame.dispose();
-					ModifieELGUI gh = new ModifieELGUI(	listStudent.get(table.getSelectedRow()),ad);
+					ModifierENSGUI g = new ModifierENSGUI(listTeacher.get(table.getSelectedRow()),ad);
 				}
-			
+
 			}
 			
 		});
@@ -155,11 +147,11 @@ public class GestionELGUI {
 		btnNewButton_2_1_1.setBounds(643, 396, 89, 23);
 		frame.getContentPane().add(btnNewButton_2_1_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("GESTION DES ELEVES");
+		JLabel lblNewLabel_1 = new JLabel("GESTION DES ENSEIGNANTS");
 		lblNewLabel_1.setFont(new Font("Verdana Pro Cond Black", Font.PLAIN, 28));
 		lblNewLabel_1.setBackground(new Color(175, 238, 238));
 		lblNewLabel_1.setForeground(new Color(178, 34, 34));
-		lblNewLabel_1.setBounds(254, 11, 270, 52);
+		lblNewLabel_1.setBounds(175, 11, 373, 52);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		
@@ -169,8 +161,7 @@ public class GestionELGUI {
 		btnNewButton_2_1_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				
-				AcceuilAdmin GG = new AcceuilAdmin(ad);
+			AcceuilAdmin GG = new AcceuilAdmin(ad);
 			}
 		});
 		
@@ -179,18 +170,6 @@ public class GestionELGUI {
 		btnNewButton_2_1_2.setBackground(new Color(135, 206, 250));
 		btnNewButton_2_1_2.setBounds(10, 11, 89, 23);
 		frame.getContentPane().add(btnNewButton_2_1_2);
-		
-		
-		
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
 	}
+
 }

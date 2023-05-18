@@ -3,10 +3,12 @@ package gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import model.Admin;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
@@ -22,7 +24,8 @@ public class AcceuilAdmin {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AcceuilAdmin window = new AcceuilAdmin();
+					Admin ad = new Admin(0,"0","0","0","0");
+					AcceuilAdmin window = new AcceuilAdmin(ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -34,84 +37,125 @@ public class AcceuilAdmin {
 	/**
 	 * Create the application.
 	 */
-	public AcceuilAdmin() {
-		initialize();
+	public AcceuilAdmin(Admin ad) {
+		initialize(ad);
 		frame.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Admin ad) {
+	
 		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(245, 255, 250));
-		frame.setBounds(100, 100, 562, 385);
+		frame.setBounds(100, 100, 647, 583);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel_2 = new JLabel("MENU ADMIN");
-		lblNewLabel_2.setLabelFor(frame);
-		lblNewLabel_2.setForeground(new Color(0, 128, 128));
-		lblNewLabel_2.setFont(new Font("Verdana Pro Black", Font.PLAIN, 28));
-		lblNewLabel_2.setBounds(252, 38, 233, 100);
-		frame.getContentPane().add(lblNewLabel_2);
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(0, 64, 128));
+		panel.setForeground(new Color(0, 0, 0));
+		panel.setBounds(10, 11, 611, 67);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\mavin\\Downloads\\1519892537247.jpeg"));
-		lblNewLabel.setBounds(10, 11, 192, 128);
-		frame.getContentPane().add(lblNewLabel);
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\mavin\\Downloads\\esigelec-irseem-squarelogo-1455621802282.png"));
+		lblNewLabel_2.setBounds(10, 11, 104, 28);
+		panel.add(lblNewLabel_2);
 		
-		JButton btnNewButton_1 = new JButton("GESTION DES ENSEIGNANTS");
-		btnNewButton_1.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-		btnNewButton_1.setForeground(new Color(178, 34, 34));
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		btnNewButton_1.setBounds(322, 275, 195, 23);
-		frame.getContentPane().add(btnNewButton_1);
+		JLabel lblNewLabel_3 = new JLabel("MENU ADMIN");
+		lblNewLabel_3.setLabelFor(frame);
+		lblNewLabel_3.setForeground(new Color(0, 128, 128));
+		lblNewLabel_3.setFont(new Font("Verdana Pro Black", Font.PLAIN, 28));
+		lblNewLabel_3.setBounds(237, 11, 260, 38);
+		panel.add(lblNewLabel_3);
 		
-		JButton btnNewButton_2 = new JButton("GESTION DES COURS ");
-		btnNewButton_2.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-		btnNewButton_2.setForeground(new Color(178, 34, 34));
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton_2.setBounds(392, 206, 144, 23);
-		frame.getContentPane().add(btnNewButton_2);
+		JLabel Labelcone = new JLabel("");
+		Labelcone.setIcon(new ImageIcon("C:\\Users\\mavin\\Downloads\\user_21980.png"));
+		Labelcone.setBounds(20, 81, 106, 112);
+		frame.getContentPane().add(Labelcone);
 		
-		JButton btnNewButton_3 = new JButton("GESTION DES ABSENCES");
-		btnNewButton_3.setForeground(new Color(178, 34, 34));
-		btnNewButton_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton_3.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-		btnNewButton_3.setBounds(53, 275, 179, 23);
-		frame.getContentPane().add(btnNewButton_3);
+		JLabel NameLabel = new JLabel(ad.getName());
+		NameLabel.setBounds(136, 108, 86, 14);
+		frame.getContentPane().add(NameLabel);
 		
-		JButton btnNewButton_4 = new JButton("GESTION DES COURS ");
-		btnNewButton_4.setForeground(new Color(178, 34, 34));
-		btnNewButton_4.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-		btnNewButton_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton_4.setBounds(213, 206, 149, 23);
-		frame.getContentPane().add(btnNewButton_4);
+		JLabel firstnameLabel = new JLabel(ad.getFirstName());
+		firstnameLabel.setBounds(136, 147, 73, 14);
+		frame.getContentPane().add(firstnameLabel);
 		
-		JButton btnNewButton_4_1 = new JButton("GESTION DES ELEVES");
-		btnNewButton_4_1.addActionListener(new ActionListener() {
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setForeground(Color.BLACK);
+		panel_1.setBackground(new Color(128, 0, 0));
+		panel_1.setBounds(10, 204, 611, 269);
+		frame.getContentPane().add(panel_1);
+		
+		JButton btnNewButton = new JButton("GESTION DES ELEVES");
+		btnNewButton.setForeground(new Color(0, 0, 0));
+		btnNewButton.setBackground(new Color(179, 255, 255));
+		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				GestionELGUI GD = new GestionELGUI();
+				GestionELGUI GD = new GestionELGUI(ad);
 			}
 		});
-		btnNewButton_4_1.setForeground(new Color(178, 34, 34));
-		btnNewButton_4_1.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-		btnNewButton_4_1.setBounds(23, 206, 149, 23);
-		frame.getContentPane().add(btnNewButton_4_1);
+		btnNewButton.setBounds(10, 22, 171, 23);
+		panel_1.add(btnNewButton);
+		
+		JButton btnAbsences = new JButton("GESTION DES ENSEIGNANTS");
+		btnAbsences.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				GestionENSGUI GE  = new GestionENSGUI(ad);
+			}
+		});
+		btnAbsences.setForeground(new Color(0, 0, 0));
+		btnAbsences.setBackground(new Color(179, 255, 255));
+		btnAbsences.setBounds(219, 22, 204, 23);
+		panel_1.add(btnAbsences);
+		
+		JButton btnAnticiper = new JButton("GESTION DES COURS");
+		btnAnticiper.setForeground(new Color(0, 0, 0));
+		btnAnticiper.setBackground(new Color(179, 255, 255));
+		btnAnticiper.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnAnticiper.setBounds(443, 22, 158, 23);
+		panel_1.add(btnAnticiper);
+		
+		JButton btnNewButton_1 = new JButton("GESTION DES ABSENCES");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton_1.setForeground(Color.BLACK);
+		btnNewButton_1.setBackground(new Color(179, 255, 255));
+		btnNewButton_1.setBounds(62, 107, 187, 23);
+		panel_1.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("GESTION DES GROUPES");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AjouterGroup gg = new AjouterGroup();
+			}
+		});
+		btnNewButton_2.setForeground(Color.BLACK);
+		btnNewButton_2.setBackground(new Color(179, 255, 255));
+		btnNewButton_2.setBounds(351, 107, 187, 23);
+		panel_1.add(btnNewButton_2);
+		
+		JButton btnLogOut = new JButton("LOG OUT");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				ConnectionGUI fg = new ConnectionGUI();
+			}
+		});
+		btnLogOut.setForeground(Color.BLACK);
+		btnLogOut.setBackground(new Color(179, 255, 255));
+		btnLogOut.setBounds(220, 510, 171, 23);
+		frame.getContentPane().add(btnLogOut);
 	}
 }

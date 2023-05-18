@@ -1,9 +1,11 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,20 +17,18 @@ import javax.swing.JTextField;
 
 import dao.GroupDAO;
 import dao.StudentDAO;
+import dao.TeacherDAO;
 import model.Admin;
 import model.Group;
 import model.Student;
+import model.Teacher;
 
-import java.awt.event.ActionListener;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-
-public class ModifieELGUI {
+public class ModifierENSGUI {
 
 	private JFrame frame;
 	private JTextField nameText;
-	private Student student;
+	private Teacher teach;
+	private JTextField phoneText;
 
 	/**
 	 * Launch the application.
@@ -37,9 +37,9 @@ public class ModifieELGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Student student = new Student(0, "hhh", "ggg", "uhhh", "nn", 0, "gre");
+					Teacher teach = new Teacher(0,"","","","","");
 					Admin ad = new Admin(0,"0","0","0","0");
-					ModifieELGUI window = new ModifieELGUI(student, ad);
+					ModifierENSGUI window = new ModifierENSGUI(teach,ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,16 +51,16 @@ public class ModifieELGUI {
 	/**
 	 * Create the application.
 	 */
-	public ModifieELGUI(Student student, Admin ad) {
-		initialize(student,ad);
+	public ModifierENSGUI(Teacher teach, Admin ad) {
+		initialize(teach,ad);
 		frame.setVisible(true);
-		student.display();
+
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Student student, Admin ad) {
+	private void initialize(Teacher teach, Admin ad) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 349);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,20 +68,8 @@ public class ModifieELGUI {
 		frame.getContentPane().add(choicePnl);
 		choicePnl.setLayout(null);
 		
-		JComboBox List_parcours = new JComboBox();
-		List_parcours.setBounds(182, 159, 72, 20);
-		choicePnl.add(List_parcours);
 		
-		JComboBox List_groups = new JComboBox();
-		List_groups.setBounds(182, 121, 72, 20);
-		choicePnl.add(List_groups);
-		
-		List_parcours.addItem("Classique");
-		List_parcours.addItem("Apprenti");
-		List_parcours.setSelectedItem(student.getSector());
-		
-		
-		JTextField firstnameText = new JTextField(student.getFirstName());
+		JTextField firstnameText = new JTextField(teach.getFirstName());
 		firstnameText.setBounds(168, 74, 86, 20);
 		choicePnl.add(firstnameText);
 		firstnameText.setColumns(10);
@@ -89,32 +77,29 @@ public class ModifieELGUI {
 		GroupDAO groupDAO = new GroupDAO();
 		ArrayList<Group> listGroup = groupDAO.getList();
 		for (int i = 0; i < listGroup.size(); i++) {
-			List_groups.addItem(listGroup.get(i).getGroup_number());
 			
 		}
-		List_groups.setSelectedItem(student.getGroup());
 
-		JButton Update = new JButton("UPDATE STUDENT ");
+		JButton Update = new JButton("UPDATE TEACHER");
 		Update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				student.setName(nameText.getText());
-				student.setFirstName(firstnameText.getText());
-				student.setSector(List_parcours.getSelectedItem().toString());
+				teach.setName(nameText.getText());
+				teach.setFirstName(firstnameText.getText());
+				teach.setPhoneNumber(phoneText.getText());
 				System.out.println("fff");
-				System.out.println(Integer.parseInt(List_groups.getSelectedItem().toString()));
-				student.setGroup(Integer.parseInt(List_groups.getSelectedItem().toString()));
-				String mail= student.getFirstName()+"."+student.getName()+"@groupe-esigelec.org";
-				student.setMail(mail);
+				
+				String mail= teach.getFirstName()+"."+teach.getName()+"@groupe-esigelec.org";
+				teach.setMail(mail);
 				// Method to generate a random alphanumeric password of a specific length
 				
 			
-				student.display();
-				StudentDAO studentDAO = new StudentDAO();
-				if(student.getName().length() == 0 || student.getFirstName().length() == 0) {
+				teach.display();
+				TeacherDAO teachDAO = new TeacherDAO();
+				if(teach.getName().length() == 0 || teach.getFirstName().length() == 0) {
 					JOptionPane.showMessageDialog(null, " Entrez le nom et le prénom");
 				}
 				else {
-					int returnValue=studentDAO.update(student); 
+					int returnValue=teachDAO.update(teach); 
 					if(returnValue!=0) {
 						JOptionPane.showMessageDialog(null, "Modification reussi");
 					}
@@ -122,7 +107,7 @@ public class ModifieELGUI {
 						JOptionPane.showMessageDialog(null, "Modification raté");
 					}
 					frame.dispose();
-					GestionELGUI GD = new GestionELGUI(ad);
+					GestionENSGUI GD = new GestionENSGUI(ad);
 				}
 				
 				
@@ -137,30 +122,29 @@ public class ModifieELGUI {
 		
 		
 		JLabel nameLabel = new JLabel("Name");
-		nameLabel.setBounds(112, 45, 46, 14);
+		nameLabel.setBounds(89, 45, 69, 14);
 		choicePnl.add(nameLabel);
 		
 		JLabel firstnameLabel = new JLabel("Firstname");
-		firstnameLabel.setBounds(112, 77, 46, 14);
+		firstnameLabel.setBounds(89, 77, 69, 14);
 		choicePnl.add(firstnameLabel);
 		
 		
 		
-		JLabel sectorLabel = new JLabel("sector");
-		sectorLabel.setBounds(112, 162, 46, 14);
-		choicePnl.add(sectorLabel);
 		
-		JLabel groupLabel = new JLabel("Group");
-		groupLabel.setBounds(112, 121, 46, 14);
-		choicePnl.add(groupLabel);
 		
-		nameText = new JTextField(student.getName());
+		nameText = new JTextField(teach.getName());
 		nameText.setColumns(10);
 		nameText.setBounds(168, 42, 86, 20);
 		choicePnl.add(nameText);
 		
+		JLabel lblPhoneNumber = new JLabel("Phone Number");
+		lblPhoneNumber.setBounds(72, 108, 86, 14);
+		choicePnl.add(lblPhoneNumber);
 		
-	
-
+		phoneText = new JTextField(teach.getPhoneNumber());
+		phoneText.setColumns(10);
+		phoneText.setBounds(168, 105, 86, 20);
+		choicePnl.add(phoneText);
 	}
 }

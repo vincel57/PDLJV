@@ -7,28 +7,28 @@ import javax.swing.JOptionPane;
 import model.*;
 
 /**
- * Classe d'acces aux donnees contenues dans la table student
+ * Classe d'acces aux donnees contenues dans la table teacher
  * 
  * @author ESIGELEC - TIC Department
  * @version 2.0
  * */
-public class StudentDAO extends ConnectionDAO {
+public class TeacherDAO extends ConnectionDAO {
 	/**
 	 * Constructor
 	 * 
 	 */
-	public StudentDAO() {
+	public TeacherDAO() {
 		super();
 	}
 
 	/**
-	 * Permet d'ajouter un eleve dans la table student.
+	 * Permet d'ajouter un eleve dans la table teacher.
 	 * Le mode est auto-commit par defaut : chaque insertion est validee
 	 * 
-	 * @param student le eleve a ajouter
+	 * @param teacher le eleve a ajouter
 	 * @return retourne le nombre de lignes ajoutees dans la table
 	 */
-	public int add(Student student) {
+	public int add(Teacher teacher) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -42,21 +42,14 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			if(student.getSector().equals("Apprenti")) {
-				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, idsector) VALUES(Incrementation.nextVal, ?, ?, ?, ?, ?, 2)");
-				
-			}
-			else if(student.getSector().equals("Classique")) {
-				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, idsector) VALUES(Incrementation.nextVal, ?, ?, ?, ?, ?, 1)");
+			ps = con.prepareStatement("INSERT INTO teacher(idteacher,lastname, firstName, tel, mail, mdp) VALUES(Incrementation.nextVal,?,?,?,?,?)");
+			ps.setString(1, teacher.getName());
+			ps.setString(2, teacher.getFirstName());
+			ps.setString(3, teacher.getPhoneNumber());
+			ps.setString(4, teacher.getMail());
+			ps.setString(5, teacher.getPassword());
 
-			}
-			ps.setString(1, student.getName());
-			ps.setString(2, student.getFirstName());
-			ps.setString(3, student.getMail());
-			ps.setString(4, student.getPassword());
-			ps.setInt(5, student.getGroup());
-
-			
+	
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -88,13 +81,13 @@ public class StudentDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de modifier un eleve dans la table student.
+	 * Permet de modifier un eleve dans la table teacher.
 	 * Le mode est auto-commit par defaut : chaque modification est validee
 	 * 
-	 * @param student le eleve a modifier
+	 * @param teacher le eleve a modifier
 	 * @return retourne le nombre de lignes modifiees dans la table
 	 */
-	public int update(Student student) {
+	public int update(Teacher teacher) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -107,13 +100,13 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE student set Lastname = ?, firstName = ?, mail = ?, mdp= ?, groupe_number= ? WHERE idstudent = ?");
-			ps.setString(1, student.getName());
-			ps.setString(2, student.getFirstName());
-			ps.setString(3, student.getMail());
-			ps.setString(4, student.getPassword());
-			ps.setInt(5, student.getGroup());
-			ps.setInt(6, student.getId());
+			ps = con.prepareStatement("UPDATE teacher set Lastname = ?, firstName = ?, tel = ?, mail= ?, mdp= ? WHERE idteacher = ?");
+			ps.setString(1, teacher.getName());
+			ps.setString(2, teacher.getFirstName());
+			ps.setString(3, teacher.getPhoneNumber());
+			ps.setString(4, teacher.getMail());
+			ps.setString(5, teacher.getPassword());
+			ps.setInt(6, teacher.getId());
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -139,11 +132,11 @@ public class StudentDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de supprimer un eleve par id dans la table student.
+	 * Permet de supprimer un eleve par id dans la table teacher.
 	 * Si ce dernier possede des articles, la suppression n'a pas lieu.
 	 * Le mode est auto-commit par defaut : chaque suppression est validee
 	 * 
-	 * @param id l'id du student à supprimer
+	 * @param id l'id du teacher à supprimer
 	 * @return retourne le nombre de lignes supprimees dans la table
 	 */
 	public int delete(int id) {
@@ -159,7 +152,7 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
 			// le getter permet de recuperer la valeur de l'ID du eleve
-			ps = con.prepareStatement("DELETE FROM student WHERE idstudent = ?");
+			ps = con.prepareStatement("DELETE FROM teacher WHERE idteacher = ?");
 			ps.setInt(1, id);
 			
 
@@ -198,12 +191,12 @@ public class StudentDAO extends ConnectionDAO {
 	 * @return le eleve trouve;
 	 * 			null si aucun eleve ne correspond a cette reference
 	 */
-	public Student get(int id, String mdp) {
+	public Teacher get(int id, String mdp) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Student returnValue = null;
-		String sector= "Sector undefined";
+		Teacher returnValue = null;
+		
 
 		// connexion a la base de donnees
 		try {
@@ -215,7 +208,7 @@ public class StudentDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM student WHERE IDSTUDENT = ? AND MDP= ?");
+			ps = con.prepareStatement("SELECT * FROM teacher WHERE IDTEACHER = ? AND MDP= ?");
 			ps.setInt(1, id);
 			ps.setString(2, mdp);
 
@@ -224,20 +217,13 @@ public class StudentDAO extends ConnectionDAO {
 			rs = ps.executeQuery();
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
-				System.out.println("ID"+rs.getInt("IDSTUDENT"));
-				returnValue = new Student(rs.getInt("IDSTUDENT"),
+				System.out.println("ID"+rs.getInt("IDTEACHER"));
+				returnValue = new Teacher(rs.getInt("IDTEACHER"),
 									       rs.getString("Lastname"),
 									       rs.getString("firstName"),
 									       rs.getString("mail"),
-									       rs.getString("MDP"),
-									       rs.getInt("groupe_number"),
-									       sector);
+									       rs.getString("mdp"),
+									       rs.getString("tel"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -270,37 +256,32 @@ public class StudentDAO extends ConnectionDAO {
 	 * 
 	 * @return une ArrayList de eleve
 	 */
-	public ArrayList<Student> getList() {
+	public ArrayList<Teacher> getList() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ArrayList<Student> returnValue = new ArrayList<Student>();
+		ArrayList<Teacher> returnValue = new ArrayList<Teacher>();
 		String sector= "Sector undefined";
 
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM student");
+			ps = con.prepareStatement("SELECT * FROM teacher");
 
 			// on execute la requete
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
 				
-				returnValue.add(new Student(rs.getInt("idstudent"),
+				
+				returnValue.add(new Teacher(rs.getInt("IDTEACHER"),
 					       rs.getString("Lastname"),
 					       rs.getString("firstName"),
 					       rs.getString("mail"),
 					       rs.getString("mdp"),
-					       rs.getInt("groupe_number"),
-					       sector));
+					       rs.getString("tel")));
 			}
+			
 		} catch (Exception ee) {
 			ee.printStackTrace();
 		} finally {
@@ -336,13 +317,13 @@ public class StudentDAO extends ConnectionDAO {
 	
 	 public static void main(String[] args) throws SQLException {
 		int returnValue;
-		StudentDAO studentDAO = new StudentDAO();
+		TeacherDAO teacherDAO = new TeacherDAO();
 		
 	
 		
 		// test de la methode getList
-		ArrayList<Student> list = studentDAO.getList();
-		for (Student s : list) {
+		ArrayList<Teacher> list = teacherDAO.getList();
+		for (Teacher s : list) {
 			// appel explicite de la methode toString de la classe Object (a privilegier)
 			System.out.println(s.toString());
 		}

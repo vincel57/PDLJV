@@ -5,7 +5,12 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import dao.AdminDAO;
+import dao.StudentDAO;
+import dao.TeacherDAO;
 import model.Admin;
+import model.Student;
+import model.Teacher;
+
 
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -18,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
-public class AdminGUI {
+public class ConnectionGUI {
 
 	private JFrame frame;
 	private JTextField textField;
@@ -32,7 +37,7 @@ public class AdminGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminGUI window = new AdminGUI();
+					ConnectionGUI window = new ConnectionGUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +49,7 @@ public class AdminGUI {
 	/**
 	 * Create the application.
 	 */
-	public AdminGUI() {
+	public ConnectionGUI() {
 		initialize();
 		frame.setVisible(true);
 
@@ -67,24 +72,49 @@ public class AdminGUI {
 		frame.getContentPane().add(choicePnl);
 		choicePnl.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Se connecter");
+		JButton btnNewButton = new JButton("LOG IN ");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				String password = new String(passwordField.getPassword());
 				AdminDAO adminDAO = new AdminDAO();
-				Admin sg = adminDAO.get( Integer.parseInt(textField.getText()), password);
-				if(sg == null) {
-					JOptionPane.showMessageDialog(new JFrame(), "Identifiant ou mot de passe incorect", "Dialog",
-							JOptionPane.ERROR_MESSAGE);
+				StudentDAO studentDAO = new StudentDAO();
+				TeacherDAO teacherDAO = new TeacherDAO();
+				Admin sg = null;
+				Student st = null;
+				Teacher se = null;
+				 sg = adminDAO.get( Integer.parseInt(textField.getText()), password);
+				 st = studentDAO.get( Integer.parseInt(textField.getText()), password);
+				 se = teacherDAO.get( Integer.parseInt(textField.getText()), password);
+
+				if(sg != null && st == null && se == null) {
+					System.out.println("User"+textField.getText());
+					System.out.println("MDP"+password); 		
+					frame.dispose();
+					AcceuilAdmin GG = new AcceuilAdmin(sg);
 				}
-				else
+				else if(st != null && sg==null && se == null)
 				{
 					System.out.println("User"+textField.getText());
 					System.out.println("MDP"+password); 		
 					frame.dispose();
-					AcceuilAdmin GG = new AcceuilAdmin();
+					st.display();
+					AcceuilStudent GS = new AcceuilStudent(st);
 				}
+				else if(se != null && sg==null && st == null) {
+					System.out.println("User"+textField.getText());
+					System.out.println("MDP"+password); 		
+					frame.dispose();
+					se.display();
+					AcceuilTeacher Ge = new AcceuilTeacher(se);
+					
+				}
+				else 
+				{
+					JOptionPane.showMessageDialog(new JFrame(), "Identifiant ou mot de passe incorect", "Dialog",
+							JOptionPane.ERROR_MESSAGE);
+				}
+		
 			}
 
 			private void displayAdmin(int id) {
@@ -99,7 +129,7 @@ public class AdminGUI {
 		
 		JLabel lblNewLabel_1 = new JLabel("New label");
 		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\mavin\\Downloads\\esig.png"));
-		lblNewLabel_1.setBounds(23, 0, 453, 108);
+		lblNewLabel_1.setBounds(23, 0, 419, 108);
 		choicePnl.add(lblNewLabel_1);
 		
 		textField = new JTextField();

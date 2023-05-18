@@ -42,7 +42,7 @@ public class GroupDAO extends ConnectionDAO {
 			
 			
 		
-			ps = con.prepareStatement("INSERT INTO gestionnaire (idgestionnaire, name, fistName, mail, password) VALUES(?, ?, ?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO Groupe (groupe_number,capacite) VALUES(?, ?)");
 			
 			
 			ps.setInt(1, group.getGroup_number());
@@ -84,11 +84,11 @@ public class GroupDAO extends ConnectionDAO {
 	 * @param group le group a modifier
 	 * @return retourne le nombre de lignes modifiees dans la table
 	 */
-	public int update(Group group) {
+	public int display(int groupe_number) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
-
+		Group group;
 		// connexion a la base de donnees
 		try {
 
@@ -97,9 +97,9 @@ public class GroupDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE group set name = ?, firstName = ?, mail = ?, password= ? WHERE id = ?");
-			ps.setInt(1, group.getGroup_number());
-			ps.setInt(2, group.getCapacity());
+			ps = con.prepareStatement("SELECT * FROM student WHERE groupe_number= ?");
+			ps.setInt(1,groupe_number);
+			
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();

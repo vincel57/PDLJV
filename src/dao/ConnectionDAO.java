@@ -23,9 +23,9 @@ public class ConnectionDAO {
 	//final static String URL   = "jdbc:oracle:thin:@oracle.esigelec.fr:1521:orcl";
 	
 	// � utiliser si vous �tes sur une machine de l'�cole :
-	final static String URL   = UrlMarvine;
-	final static String LOGIN = LogMarvine;   // remplacer les ********. Exemple C##BDD1_1
-	final static String PASS  = PassMarvine;   // remplacer les ********. Exemple BDD11
+	final static String URL   = UrlJarfino;
+	final static String LOGIN = LogJarfino;   // remplacer les ********. Exemple C##BDD1_1
+	final static String PASS  = PassJarfino;   // remplacer les ********. Exemple BDD11
 	
 	/**n  
 	 * Constructor

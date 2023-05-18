@@ -1,27 +1,24 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import model.Admin;
-import model.Student;
-import dao.StudentDAO;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
 
-public class SupprimerELGUI {
+import dao.TeacherDAO;
+import model.Admin;
+import model.Teacher;
+
+public class SupprimerENSGUI {
 
 	private JFrame frame;
-	private Student student;
 
 	/**
 	 * Launch the application.
@@ -30,9 +27,9 @@ public class SupprimerELGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Student student = new Student(0, "hhh", "ggg", "uhhh", "nn", 0, "gre");
+					Teacher teach = new Teacher(0,"","","","","");
 					Admin ad = new Admin(0,"0","0","0","0");
-					SupprimerELGUI window = new SupprimerELGUI(student,ad);
+					SupprimerENSGUI window = new SupprimerENSGUI(teach,ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,15 +41,16 @@ public class SupprimerELGUI {
 	/**
 	 * Create the application.
 	 */
-	public SupprimerELGUI(Student student, Admin ad) {
-		initialize(student,ad);
+	public SupprimerENSGUI(Teacher teach, Admin ad) {
+		initialize(teach, ad);
 		frame.setVisible(true);
+
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Student student, Admin ad) {
+	private void initialize(Teacher teach, Admin ad) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 586, 389);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,7 +58,7 @@ public class SupprimerELGUI {
 		frame.getContentPane().add(choicePnl);
 		choicePnl.setLayout(null);
 		
-		JLabel NameChamp = new JLabel("Nom et prénom de l'élève ");
+		JLabel NameChamp = new JLabel("Nom et prénom de l'Enseignant ");
 		NameChamp.setForeground(new Color(139, 0, 0));
 		NameChamp.setBounds(21, 107, 138, 14);
 		choicePnl.add(NameChamp);
@@ -69,8 +67,8 @@ public class SupprimerELGUI {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				StudentDAO studentDAO = new StudentDAO();
-				int returnValue=studentDAO.delete(student.getId()); 
+				TeacherDAO teachDAO = new TeacherDAO();
+				int returnValue=teachDAO.delete(teach.getId()); 
 				if(returnValue!=0) {
 					JOptionPane.showMessageDialog(null, "Suppression reussi");
 				}
@@ -78,7 +76,7 @@ public class SupprimerELGUI {
 					JOptionPane.showMessageDialog(null, "Suppression raté");
 				}
 				frame.dispose();
-				GestionELGUI GD = new GestionELGUI(ad); 
+				GestionENSGUI GD = new GestionENSGUI(ad); 
 			}
 		});
 		btnNewButton.setForeground(new Color(139, 0, 0));
@@ -92,7 +90,7 @@ public class SupprimerELGUI {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				GestionELGUI GD = new GestionELGUI(ad); 
+				GestionENSGUI GD = new GestionENSGUI(ad);
 			}
 			
 		});
@@ -102,34 +100,29 @@ public class SupprimerELGUI {
 		btnNewButton_1.setBounds(288, 302, 92, 23);
 		choicePnl.add(btnNewButton_1);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Voulez-vous vraiment supprimer cet élève? ");
+		JLabel lblNewLabel_1_1 = new JLabel("Voulez-vous vraiment supprimer cet Enseignant? ");
 		lblNewLabel_1_1.setFont(new Font("Verdana Pro Cond Black", Font.PLAIN, 21));
 		lblNewLabel_1_1.setForeground(new Color(139, 0, 0));
 		lblNewLabel_1_1.setBounds(67, 11, 448, 37);
 		choicePnl.add(lblNewLabel_1_1);
 		
-		JLabel NamesuppLabel = new JLabel(student.getName()+" "+student.getFirstName());
+		JLabel NamesuppLabel = new JLabel(teach.getName()+" "+teach.getFirstName());
 		NamesuppLabel.setBounds(179, 107, 266, 14);
 		choicePnl.add(NamesuppLabel);
 		
-		JLabel sectorChamp = new JLabel("Sector");
+		JLabel sectorChamp = new JLabel("Phone Number");
 		sectorChamp.setForeground(new Color(139, 0, 0));
 		sectorChamp.setBounds(21, 146, 138, 14);
 		choicePnl.add(sectorChamp);
 		
-		JLabel GroupChamp = new JLabel("Group");
-		GroupChamp.setForeground(new Color(139, 0, 0));
-		GroupChamp.setBounds(21, 179, 138, 14);
-		choicePnl.add(GroupChamp);
-		
-		JLabel sectorsuppLabel = new JLabel(student.getSector());
+		JLabel sectorsuppLabel = new JLabel(teach.getPhoneNumber());
 		sectorsuppLabel.setBounds(179, 146, 266, 14);
 		choicePnl.add(sectorsuppLabel);
 		
-		JLabel groupsuppLabel = new JLabel(""+student.getGroup());
-		groupsuppLabel.setBounds(179, 179, 266, 14);
-		choicePnl.add(groupsuppLabel);
 		
 		
+		
+
 	}
+
 }

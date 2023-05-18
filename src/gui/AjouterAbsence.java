@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class AjouterELGUI {
+public class AjouterAbsence {
 
 	private JFrame frame;
 	private JTextField name;
@@ -38,7 +38,7 @@ public class AjouterELGUI {
 			public void run() {
 				try {
 					Admin ad = new Admin(0,"0","0","0","0");
-					AjouterELGUI window = new AjouterELGUI(ad);
+					AjouterAbsence window = new AjouterAbsence(ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +50,7 @@ public class AjouterELGUI {
 	/**
 	 * Create the application.
 	 */
-	public AjouterELGUI(Admin ad) {
+	public AjouterAbsence(Admin ad) {
 		initialize(ad);
 		frame.setVisible(true);
 	}

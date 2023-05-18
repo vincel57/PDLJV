@@ -1,34 +1,33 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.security.SecureRandom;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dao.AdminDAO;
 import dao.GroupDAO;
-import dao.StudentDAO;
+import dao.TeacherDAO;
 import model.Admin;
 import model.Group;
-import model.Student;
+import model.Teacher;
 
-import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.JComboBox;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-
-public class AjouterELGUI {
+public class AjouterENSGUI {
 
 	private JFrame frame;
 	private JTextField name;
 	private JTextField firstname;
+	private JTextField phoneN;
 
 	/**
 	 * Launch the application.
@@ -38,7 +37,7 @@ public class AjouterELGUI {
 			public void run() {
 				try {
 					Admin ad = new Admin(0,"0","0","0","0");
-					AjouterELGUI window = new AjouterELGUI(ad);
+					AjouterENSGUI window = new AjouterENSGUI(ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +49,7 @@ public class AjouterELGUI {
 	/**
 	 * Create the application.
 	 */
-	public AjouterELGUI(Admin ad) {
+	public AjouterENSGUI(Admin ad) {
 		initialize(ad);
 		frame.setVisible(true);
 	}
@@ -58,9 +57,9 @@ public class AjouterELGUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Admin ad) {
+	private void initialize(Admin ad ) {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 361);
+		frame.setBounds(100, 100, 450, 319);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel choicePnl = new JPanel();
 		frame.getContentPane().add(choicePnl);
@@ -71,10 +70,6 @@ public class AjouterELGUI {
 		choicePnl.add(name);
 		name.setColumns(10);
 
-		JComboBox List_groups = new JComboBox();
-		List_groups.setBounds(182, 165, 72, 20);
-		choicePnl.add(List_groups);
-
 		JLabel lblNewLabel_1 = new JLabel("Name");
 		lblNewLabel_1.setBounds(114, 45, 46, 14);
 		choicePnl.add(lblNewLabel_1);
@@ -83,25 +78,19 @@ public class AjouterELGUI {
 		lblNewLabel_2.setBounds(101, 76, 58, 14);
 		choicePnl.add(lblNewLabel_2);
 
-		JComboBox List_parcours = new JComboBox();
-		List_parcours.setBounds(182, 196, 72, 20);
-		choicePnl.add(List_parcours);
-
-		List_parcours.addItem("Classique");
-		List_parcours.addItem("Apprenti");
-
-		JButton btnNewButton = new JButton("ADD STUDENT ");
+		JButton btnNewButton = new JButton("ADD TEACHER");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Student student = new Student(0, "", "", "", "", 0, "");
-				student.setName(name.getText());
-				student.setFirstName(firstname.getText());
-				student.setSector(List_parcours.getSelectedItem().toString());
+				Teacher teacher = new Teacher(0, "", "", "", "", "");
+				teacher.setName(name.getText());
+				teacher.setFirstName(firstname.getText());
+				teacher.setPhoneNumber(phoneN.getText());
+			
 				System.out.println("fff");
-				System.out.println(Integer.parseInt(List_groups.getSelectedItem().toString()));
-				student.setGroup(Integer.parseInt(List_groups.getSelectedItem().toString()));
-				String mail= student.getFirstName()+"."+student.getName()+"@groupe-esigelec.org";
-				student.setMail(mail);
+
+				
+				String mail= teacher.getFirstName()+"."+teacher.getName()+"@groupe-esigelec.org";
+				teacher.setMail(mail);
 				// Method to generate a random alphanumeric password of a specific length
 				int len = 5;
 
@@ -118,14 +107,14 @@ public class AjouterELGUI {
 					int randomIndex = random.nextInt(chars.length());
 					sb.append(chars.charAt(randomIndex));
 				}
-				student.setPassword(sb.toString());
-				student.display();
-				StudentDAO studentDAO = new StudentDAO();
-				if(student.getName().length() == 0 || student.getFirstName().length() == 0) {
+				teacher.setPassword(sb.toString());
+				teacher.display();
+				TeacherDAO teacherDAO = new TeacherDAO();
+				if(teacher.getName().length() == 0 || teacher.getFirstName().length() == 0) {
 					JOptionPane.showMessageDialog(null, " Entrez le nom et le prénom");
 				}
 				else {
-					int returnValue=studentDAO.add(student); 
+					int returnValue=teacherDAO.add(teacher); 
 					if(returnValue!=0) {
 						JOptionPane.showMessageDialog(null, "Enregistrement reussi");
 					}
@@ -134,7 +123,7 @@ public class AjouterELGUI {
 					}
 					
 					frame.dispose();
-					GestionELGUI GD = new GestionELGUI(ad); 
+				GestionENSGUI GD = new GestionENSGUI(ad); 
 				}
 				
 
@@ -143,28 +132,23 @@ public class AjouterELGUI {
 		btnNewButton.setBackground(new Color(224, 255, 255));
 		btnNewButton.setForeground(new Color(178, 34, 34));
 		btnNewButton.setFont(new Font("Verdana Pro Cond Semibold", Font.PLAIN, 15));
-		btnNewButton.setBounds(101, 274, 216, 23);
+		btnNewButton.setBounds(103, 196, 216, 23);
 		choicePnl.add(btnNewButton);
 
-		GroupDAO groupDAO = new GroupDAO();
-		ArrayList<Group> listGroup = groupDAO.getList();
-		for (int i = 0; i < listGroup.size(); i++) {
-			List_groups.addItem(listGroup.get(i).getGroup_number());
-
-		}
+		
 
 		firstname = new JTextField();
 		firstname.setColumns(10);
 		firstname.setBounds(168, 73, 86, 20);
 		choicePnl.add(firstname);
-
-		JLabel lblNewLabel_1_4 = new JLabel("Group");
-		lblNewLabel_1_4.setBounds(114, 168, 46, 14);
-		choicePnl.add(lblNewLabel_1_4);
-
-		JLabel lblNewLabel_1_4_1 = new JLabel("Sector");
-		lblNewLabel_1_4_1.setBounds(114, 199, 46, 14);
-		choicePnl.add(lblNewLabel_1_4_1);
-
+		
+		phoneN = new JTextField();
+		phoneN.setColumns(10);
+		phoneN.setBounds(168, 109, 86, 20);
+		choicePnl.add(phoneN);
+		
+		JLabel phone = new JLabel("PhoneNumber");
+		phone.setBounds(84, 112, 76, 14);
+		choicePnl.add(phone);
 	}
 }
