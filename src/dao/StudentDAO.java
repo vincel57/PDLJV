@@ -42,12 +42,12 @@ public class StudentDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			if(student.getSector().equals("Apprenti")) {
-				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, idsector) VALUES(Incrementation.nextVal, ?, ?, ?, ?, ?, 2)");
+			if(student.getSector().equals("Apprentie")) {
+				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, sector) VALUES(seq_student.nextVal, ?, ?, ?, ?, ?, 'Apprenti(e)')");
 				
 			}
 			else if(student.getSector().equals("Classique")) {
-				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, idsector) VALUES(Incrementation.nextVal, ?, ?, ?, ?, ?, 1)");
+				ps = con.prepareStatement("INSERT INTO student(idstudent,lastname, firstName, mail, mdp, groupe_number, sector) VALUES(seq_student.nextVal, ?, ?, ?, ?, ?, 'Classsique')");
 
 			}
 			ps.setString(1, student.getName());
@@ -275,7 +275,7 @@ public class StudentDAO extends ConnectionDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		ArrayList<Student> returnValue = new ArrayList<Student>();
-		String sector= "Sector undefined";
+	
 
 		// connexion a la base de donnees
 		try {
@@ -286,12 +286,7 @@ public class StudentDAO extends ConnectionDAO {
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
+				
 				
 				returnValue.add(new Student(rs.getInt("idstudent"),
 					       rs.getString("Lastname"),
@@ -299,7 +294,7 @@ public class StudentDAO extends ConnectionDAO {
 					       rs.getString("mail"),
 					       rs.getString("mdp"),
 					       rs.getInt("groupe_number"),
-					       sector));
+					       rs.getString("sector")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

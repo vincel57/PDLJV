@@ -28,10 +28,11 @@ public class SessionDAO extends ConnectionDAO {
 	 * @param cours le eleve a ajouter
 	 * @return retourne le nombre de lignes ajoutees dans la table
 	 */
-	public int add(Course cours) {
+	public int add(Session sess) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
+		
 	
 
 		// connexion a la base de donnees
@@ -42,15 +43,17 @@ public class SessionDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("INSERT INTO course (idcours,name, totalTime, examTime, tDtime, tPtime, amphiTime) VALUES(?, ?, ?, ?, ?, ?, ?)");
-			ps.setInt(1, cours.getIdCours());
-			ps.setString(2, cours.getName());
-			ps.setString(3, cours.getTotalTime());
-			ps.setString(4, cours.getExamTime());
-			ps.setString(5, cours.getTDtime());
-			ps.setString(6, cours.getTPtime());			
-			ps.setString(7, cours.getAmphiTime());
-
+			
+			ps = con.prepareStatement("INSERT INTO seance (idseance,debut, fin,dateseance,room,name,idsession_type,groupe_number,id_course) VALUES(?, ?, ?, ?, ?, ?, ?,?,?)");
+			ps.setInt(1, sess.getIdsession());
+			ps.setString(2, sess.getStart());
+			ps.setString(3, sess.getEnd());
+			ps.setString(4, sess.getDate());
+			ps.setString(5, sess.getRoom());
+			ps.setString(6, sess.getName());
+			ps.setString(7, sess.getType());
+			ps.setInt(8, sess.getGroupe_number());
+			ps.setString(9, sess.getMatiere());
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -88,7 +91,7 @@ public class SessionDAO extends ConnectionDAO {
 	 * @param cours le eleve a modifier
 	 * @return retourne le nombre de lignes modifiees dans la table
 	 */
-	public int update(Course cours) {
+	public int update(Session sess) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -101,15 +104,16 @@ public class SessionDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE course set name = ?, totalTime = ?, examTime = ?, tDtime= ?, tPtime= ?, amphitime=? ,WHERE idcourse = ?");
-			
-			ps.setString(1, cours.getName());
-			ps.setString(2, cours.getTotalTime());
-			ps.setString(3, cours.getExamTime());
-			ps.setString(4, cours.getTDtime());
-			ps.setString(5, cours.getTPtime());			
-			ps.setString(6, cours.getAmphiTime());
-			ps.setInt(7, cours.getIdCours());
+			ps = con.prepareStatement("UPDATE seance set debut = ?, fin = ?, dateseance = ?, room= ?, name= ?,idsession_type=?, id_course=? ,WHERE idseance = ?");
+
+			ps.setString(1, sess.getStart());
+			ps.setString(2, sess.getEnd());
+			ps.setString(3, sess.getDate());
+			ps.setString(4, sess.getRoom());
+			ps.setString(5, sess.getName());
+			ps.setString(6, sess.getType());
+			ps.setString(7, sess.getMatiere());
+			ps.setInt(8, sess.getIdsession());	
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -155,7 +159,7 @@ public class SessionDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
 			// le getter permet de recuperer la valeur de l'ID du eleve
-			ps = con.prepareStatement("DELETE FROM course WHERE idcours = ?");
+			ps = con.prepareStatement("DELETE FROM seance WHERE idseance = ?");
 			ps.setInt(1, id);
 			
 			
@@ -195,11 +199,11 @@ public class SessionDAO extends ConnectionDAO {
 	 * @return le eleve trouve;
 	 * 			null si aucun eleve ne correspond a cette reference
 	 */
-	public Course get(int id) {
+	public Session get(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Course returnValue = null;
+		Session returnValue = null;
 		String sector= "Sector undefined";
 
 		// connexion a la base de donnees
@@ -212,23 +216,26 @@ public class SessionDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM course WHERE IDCOURSE = ?");
+			ps = con.prepareStatement("SELECT * FROM seance WHERE idseance = ?");
 			ps.setInt(1, id);
 	
-
-			// on execute la requete
+		//	int idsession, String start, String end, String date, String room, String name, String type,
+		//	String matiere, String teach_name, int groupe_numbe			// on execute la requete
 			// rs contient un pointeur situe juste avant la premiere ligne retournee
 			rs = ps.executeQuery();
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
-				System.out.println("ID"+rs.getInt("IDSTUDENT"));
-				returnValue = new Course(rs.getInt("IDCOURSE"),
+				System.out.println("ID"+rs.getInt("idseance"));
+				returnValue = new Session(rs.getInt("idseance"),
+									       rs.getString("debut"),
+									       rs.getString("fin"),
+									       rs.getString("dateseance"),
+									       rs.getString("room"),
 									       rs.getString("name"),
-									       rs.getString("totalTime"),
-									       rs.getString("examTime"),
-									       rs.getString("tDtime"),
-									       rs.getString("tPtime"),
-									       rs.getString("amphiTime"));
+									       rs.getString("idsession_type"),
+									       rs.getString("id_course"),
+									       rs.getString("teach_name"),
+									       rs.getInt("groupe_number"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -261,17 +268,17 @@ public class SessionDAO extends ConnectionDAO {
 	 * 
 	 * @return une ArrayList de eleve
 	 */
-	public ArrayList<Course> getList() {
+	public ArrayList<Session> getList() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ArrayList<Course> returnValue = new ArrayList<Course>();
-		String sector= "Sector undefined";
+		ArrayList<Session> returnValue = new ArrayList<Session>();
+		
 
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM cours");
+			ps = con.prepareStatement("SELECT * FROM seance");
 
 			// on execute la requete
 			rs = ps.executeQuery();
@@ -279,13 +286,16 @@ public class SessionDAO extends ConnectionDAO {
 			while (rs.next()) {
 				
 				
-				returnValue.add(new Course(rs.getInt("IDCOURSE"),
+				returnValue.add(new Session(rs.getInt("idseance"),
+					       rs.getString("debut"),
+					       rs.getString("fin"),
+					       rs.getString("dateseance"),
+					       rs.getString("room"),
 					       rs.getString("name"),
-					       rs.getString("totalTime"),
-					       rs.getString("examTime"),
-					       rs.getString("tDtime"),
-					       rs.getString("tPtime"),
-					       rs.getString("amphiTime")));
+					       rs.getString("idsession_type"),
+					       rs.getString("id_course"),
+					       rs.getString("teach_name"),
+					       rs.getInt("groupe_number")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -320,19 +330,5 @@ public class SessionDAO extends ConnectionDAO {
 	 */
 	
 	
-	 public static void main(String[] args) throws SQLException {
-		int returnValue;
-		SessionDAO coursDAO = new SessionDAO();
-		
 	
-		
-		// test de la methode getList
-		ArrayList<Course> list = coursDAO.getList();
-		for (Course s : list) {
-			// appel explicite de la methode toString de la classe Object (a privilegier)
-			System.out.println(s.toString());
-		}
-		System.out.println();
-	
-	}
 }

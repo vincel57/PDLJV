@@ -2,6 +2,7 @@ package model;
 
 public class Session {
 
+
 	private int idsession;
 	private String start;
 	private String end;
@@ -10,17 +11,23 @@ public class Session {
 	private String name;
 	private String type;
 	private String matiere;
+	private String teach_name;
+	private int groupe_number;
 	
-	public Session( int idsession, String start, String end, String date, String room, String name, String type, String matiere) {
+
+	public Session(int idsession, String start, String end, String date, String room, String name, String type,
+			String matiere, String teach_name, int groupe_number) {
 		super();
-		this.idsession= idsession;
+		this.idsession = idsession;
 		this.start = start;
 		this.end = end;
 		this.date = date;
 		this.room = room;
 		this.name = name;
 		this.type = type;
-		this.matiere= matiere;
+		this.matiere = matiere;
+		this.teach_name = teach_name;
+		this.groupe_number = groupe_number;
 	}
 
 
@@ -87,6 +94,30 @@ public class Session {
 
 	public void setMatiere(String matiere) {
 		this.matiere = matiere;
+	}
+
+
+
+	public String getTeach_name() {
+		return teach_name;
+	}
+
+
+
+	public void setTeach_name(String teach_name) {
+		this.teach_name = teach_name;
+	}
+
+
+
+	public int getGroupe_number() {
+		return groupe_number;
+	}
+
+
+
+	public void setGroupe_number(int groupe_number) {
+		this.groupe_number = groupe_number;
 	}
 	
 	

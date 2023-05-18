@@ -85,7 +85,7 @@ public class Planning {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		Session se= new Session(4,"08h","9h","17/05/2001","D1287","rhhh","TP","ATS");
+		Session se= new Session(4,"08h","9h","17/05/2001","D1287","rhhh","TP","ATS","CABOT",2);
 		JLabel titre = new JLabel("Date du jour");
 		titre.setBounds(439, 28, 90, 14);
 		frame.getContentPane().add(titre);

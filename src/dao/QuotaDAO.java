@@ -7,28 +7,28 @@ import javax.swing.JOptionPane;
 import model.*;
 
 /**
- * Classe d'acces aux donnees contenues dans la table cours
+ * Classe d'acces aux donnees contenues dans la table quota
  * 
  * @author ESIGELEC - TIC Department
  * @version 2.0
  * */
-public class CourseDAO extends ConnectionDAO {
+public class QuotaDAO extends ConnectionDAO {
 	/**
 	 * Constructor
 	 * 
 	 */
-	public CourseDAO() {
+	public QuotaDAO() {
 		super();
 	}
 
 	/**
-	 * Permet d'ajouter un eleve dans la table cours.
+	 * Permet d'ajouter un eleve dans la table quota.
 	 * Le mode est auto-commit par defaut : chaque insertion est validee
 	 * 
-	 * @param cours le eleve a ajouter
+	 * @param quota le eleve a ajouter
 	 * @return retourne le nombre de lignes ajoutees dans la table
 	 */
-	public int add(Course cours) {
+	public int add(Quota quota) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -42,15 +42,16 @@ public class CourseDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("INSERT INTO course (idcourse ,name, totalTime, examTime, tDtime, tPtime, amphiTime, idteacher) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-			ps.setInt(1, cours.getIdCours());
-			ps.setString(2, cours.getName());
-			ps.setString(3, cours.getTotalTime());
-			ps.setString(4, cours.getExamTime());
-			ps.setString(5, cours.getTDtime());
-			ps.setString(6, cours.getTPtime());			
-			ps.setString(7, cours.getAmphiTime());
+			
+			ps = con.prepareStatement("INSERT INTO quotas(idquota,seuil, sanction) VALUES(?, ?, ?)");
 
+			ps.setInt(1, quota.getIdquota());
+			ps.setFloat(2, quota.getSeuil());
+			ps.setString(3, quota.getSanction());
+		
+			
+
+			
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -82,13 +83,13 @@ public class CourseDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de modifier un eleve dans la table cours.
+	 * Permet de modifier un eleve dans la table quota.
 	 * Le mode est auto-commit par defaut : chaque modification est validee
 	 * 
-	 * @param cours le eleve a modifier
+	 * @param quota le eleve a modifier
 	 * @return retourne le nombre de lignes modifiees dans la table
 	 */
-	public int update(Course cours) {
+	public int update(Quota quota) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -101,15 +102,11 @@ public class CourseDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE course set name = ?, totalTime = ?, examTime = ?, tDtime= ?, tPtime= ?, amphitime=? ,WHERE idcourse = ?");
+			ps = con.prepareStatement("UPDATE quota set  seuil = ?, sanction = ?, WHERE idquota = ?");
+			ps.setFloat(1, quota.getSeuil());
+			ps.setString(2, quota.getSanction());
+			ps.setInt(3, quota.getIdquota());
 			
-			ps.setString(1, cours.getName());
-			ps.setString(2, cours.getTotalTime());
-			ps.setString(3, cours.getExamTime());
-			ps.setString(4, cours.getTDtime());
-			ps.setString(5, cours.getTPtime());			
-			ps.setString(6, cours.getAmphiTime());
-			ps.setInt(7, cours.getIdCours());
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -135,11 +132,11 @@ public class CourseDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de supprimer un eleve par id dans la table cours.
+	 * Permet de supprimer un eleve par id dans la table quota.
 	 * Si ce dernier possede des articles, la suppression n'a pas lieu.
 	 * Le mode est auto-commit par defaut : chaque suppression est validee
 	 * 
-	 * @param id l'id du cours à supprimer
+	 * @param id l'id du quota à supprimer
 	 * @return retourne le nombre de lignes supprimees dans la table
 	 */
 	public int delete(int id) {
@@ -155,9 +152,8 @@ public class CourseDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
 			// le getter permet de recuperer la valeur de l'ID du eleve
-			ps = con.prepareStatement("DELETE FROM course WHERE idcours = ?");
+			ps = con.prepareStatement("DELETE FROM quota WHERE idquota = ?");
 			ps.setInt(1, id);
-			
 			
 
 			// Execution de la requete
@@ -195,11 +191,11 @@ public class CourseDAO extends ConnectionDAO {
 	 * @return le eleve trouve;
 	 * 			null si aucun eleve ne correspond a cette reference
 	 */
-	public Course get(int id) {
+	public Quota get(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Course returnValue = null;
+		Quota returnValue = null;
 		String sector= "Sector undefined";
 
 		// connexion a la base de donnees
@@ -212,23 +208,24 @@ public class CourseDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM course WHERE IDCOURSE = ?");
+			ps = con.prepareStatement("SELECT * FROM quota WHERE idquota = ? ");
 			ps.setInt(1, id);
-	
 
 			// on execute la requete
 			// rs contient un pointeur situe juste avant la premiere ligne retournee
 			rs = ps.executeQuery();
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
+				if(rs.getInt("idsector")==2) {
+					sector = "Apprenti";
+				}
+				else if(rs.getInt("idsector")==1) {
+					sector = "Classique";
+				}
 				System.out.println("ID"+rs.getInt("IDSTUDENT"));
-				returnValue = new Course(rs.getInt("IDCOURSE"),
-									       rs.getString("name"),
-									       rs.getString("totalTime"),
-									       rs.getString("examTime"),
-									       rs.getString("tDtime"),
-									       rs.getString("tPtime"),
-									       rs.getString("amphiTime"));
+				returnValue = new Quota(rs.getInt("idquota"),
+									       rs.getInt("seuil"),
+									       rs.getString("sanction"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -261,17 +258,17 @@ public class CourseDAO extends ConnectionDAO {
 	 * 
 	 * @return une ArrayList de eleve
 	 */
-	public ArrayList<Course> getList() {
+	public ArrayList<Quota> getList() {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ArrayList<Course> returnValue = new ArrayList<Course>();
+		ArrayList<Quota> returnValue = new ArrayList<Quota>();
 		String sector= "Sector undefined";
 
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM course");
+			ps = con.prepareStatement("SELECT * FROM quota");
 
 			// on execute la requete
 			rs = ps.executeQuery();
@@ -279,13 +276,9 @@ public class CourseDAO extends ConnectionDAO {
 			while (rs.next()) {
 				
 				
-				returnValue.add(new Course(rs.getInt("IDCOURSE"),
-					       rs.getString("name"),
-					       rs.getString("totalTime"),
-					       rs.getString("examTime"),
-					       rs.getString("tDtime"),
-					       rs.getString("tPtime"),
-					       rs.getString("amphiTime")));
+				returnValue.add(new Quota(rs.getInt("idquota"),
+					       rs.getInt("seuil"),
+					       rs.getString("sanction")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -320,19 +313,5 @@ public class CourseDAO extends ConnectionDAO {
 	 */
 	
 	
-	 public static void main(String[] args) throws SQLException {
-		int returnValue;
-		CourseDAO coursDAO = new CourseDAO();
-		
 	
-		
-		// test de la methode getList
-		ArrayList<Course> list = coursDAO.getList();
-		for (Course s : list) {
-			// appel explicite de la methode toString de la classe Object (a privilegier)
-			System.out.println(s.toString());
-		}
-		System.out.println();
-	
-	}
 }

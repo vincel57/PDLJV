@@ -2,6 +2,19 @@ package model;
 
 public class Course {
 
+	public Course(int idcours, String name, String totalTime, String examTime, String tDtime, String tPtime,
+			String amphiTime, String teach_name) {
+		super();
+		this.idcours = idcours;
+		this.name = name;
+		TotalTime = totalTime;
+		ExamTime = examTime;
+		TDtime = tDtime;
+		TPtime = tPtime;
+		AmphiTime = amphiTime;
+		this.teach_name = teach_name;
+	}
+
 	private int idcours;
 	private String name;
 	private String TotalTime;
@@ -9,23 +22,12 @@ public class Course {
 	private String TDtime;
 	private String TPtime;
 	private String AmphiTime;
+	private String teach_name;
 	
 	
 	
-	public Course(int idcours, String name, String totalTime, String examTime, String tDtime, String tPtime, String amphiTime) {
-		this.idcours= idcours;
-		this.name = name;
-		TotalTime = totalTime;
-		ExamTime = examTime;
-		TDtime = tDtime;
-		TPtime = tPtime;
-		AmphiTime = amphiTime;
-		
-	}
-
-	public int getIdCours() {
-		return idcours;
-	}
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -88,6 +90,18 @@ public class Course {
 	public void display() {
 		System.out.println("Cours"+name);
 		System.out.println("Temps total"+TotalTime);
+	}
+	public String getTeach_name() {
+		return teach_name;
+	}
+	public void setTeach_name(String teach_name) {
+		this.teach_name = teach_name;
+	}
+	public int getIdcours() {
+		return idcours;
+	}
+	public void setIdcours(int idcours) {
+		this.idcours = idcours;
 	}
 		
 

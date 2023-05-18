@@ -2,24 +2,24 @@ package model;
 
 public class Justificatory {
 
-		private String type;
-		private String date;
-		private boolean Validity;
-		
-			public Justificatory(String type, String date, boolean validity) {
-				super();
-				this.type = type;
-				this.date = date;
-				Validity = validity;
+	private int idjustificatory;
+	private String date;
+	private String Validity;
+	private String link;
+	private String student;
+	
+	
+		public Justificatory(int idjustificatory, String date, String validity, String link, String student) {
+		super();
+		this.idjustificatory=  idjustificatory;
+		this.date = date;
+		this.Validity = validity;
+		this.link = link;
+		this.student= student;
 	}
 
-			public String getType() {
-				return type;
-			}
+		
 
-			public void setType(String type) {
-				this.type = type;
-			}
 
 			public String getDate() {
 				return date;
@@ -29,9 +29,49 @@ public class Justificatory {
 				this.date = date;
 			}
 
-			public boolean isValidity() {
+			public String getValidity() {
 				return Validity;
 			}
+
+
+
+			public void setValidity(String validity) {
+				Validity = validity;
+			}
+
+
+
+			public String getLink() {
+				return link;
+			}
+
+
+			public void setLink(String link) {
+				this.link = link;
+			}
+
+
+
+			public int getIdjustificatory() {
+				return idjustificatory;
+			}
+
+
+
+
+			public String getStudent() {
+				return student;
+			}
+
+
+
+
+			public void setStudent(String student) {
+				this.student = student;
+			}
+
+
+
 
 		
 		
