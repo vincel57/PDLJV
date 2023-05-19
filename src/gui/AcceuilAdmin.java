@@ -120,6 +120,7 @@ public class AcceuilAdmin {
 		btnAnticiper.setBackground(new Color(179, 255, 255));
 		btnAnticiper.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				GestionMatiereGUI f = new GestionMatiereGUI(ad);
 			}
 		});
 		btnAnticiper.setBounds(443, 22, 158, 23);

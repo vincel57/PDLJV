@@ -10,25 +10,36 @@ import javax.swing.JTextField;
 
 import dao.AdminDAO;
 import dao.GroupDAO;
-import dao.StudentDAO;
+import dao.TeacherDAO;
+import dao.SessionDAO;
 import model.Admin;
+import model.Course;
 import model.Group;
-import model.Student;
+import model.Teacher;
+import model.Session;
 
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.awt.event.ActionEvent;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import com.toedter.calendar.JCalendar;
 
 public class AjouterSessionGUI {
 
 	private JFrame frame;
-	private JTextField name;
-	private JTextField firstname;
+	private JTextField nomText;
+	private JTextField salleText;
+	private JTextField dateText;
 
 	/**
 	 * Launch the application.
@@ -38,7 +49,9 @@ public class AjouterSessionGUI {
 			public void run() {
 				try {
 					Admin ad = new Admin(0,"0","0","0","0");
-					AjouterSessionGUI window = new AjouterSessionGUI(ad);
+					Course cours = new Course(0, "", "", "", "", "", "","");
+
+					AjouterSessionGUI window = new AjouterSessionGUI(ad,cours);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,82 +63,193 @@ public class AjouterSessionGUI {
 	/**
 	 * Create the application.
 	 */
-	public AjouterSessionGUI(Admin ad) {
-		initialize(ad);
+	public AjouterSessionGUI(Admin ad, Course cours) {
+		initialize(ad,cours);
 		frame.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Admin ad) {
+	private void initialize(Admin ad, Course cours) {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 361);
+		frame.setBounds(100, 100, 868, 601);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel choicePnl = new JPanel();
 		frame.getContentPane().add(choicePnl);
 		choicePnl.setLayout(null);
+		
+		JCalendar calendar = new JCalendar();
+		calendar.setBounds(342, 316, 205, 153);
+		choicePnl.add(calendar);
 
-		name = new JTextField();
-		name.setBounds(168, 42, 86, 20);
-		choicePnl.add(name);
-		name.setColumns(10);
+		nomText = new JTextField();
+		nomText.setBounds(170, 29, 86, 20);
+		choicePnl.add(nomText);
+		nomText.setColumns(10);
+		//"Matiere", "totalTime", "examTime", "tDtime", "tPtime", "amphiTime","Enseignant"
 
-		JComboBox List_groups = new JComboBox();
-		List_groups.setBounds(182, 165, 72, 20);
-		choicePnl.add(List_groups);
+		JLabel nomLabel = new JLabel("Nom");
+		nomLabel.setBounds(114, 32, 46, 14);
+		choicePnl.add(nomLabel);
 
-		JLabel lblNewLabel_1 = new JLabel("Name");
-		lblNewLabel_1.setBounds(114, 45, 46, 14);
-		choicePnl.add(lblNewLabel_1);
+		JLabel debutLabel = new JLabel("Heure de debut");
+		debutLabel.setBounds(75, 75, 97, 14);
+		choicePnl.add(debutLabel);
 
-		JLabel lblNewLabel_2 = new JLabel("Firstname");
-		lblNewLabel_2.setBounds(101, 76, 58, 14);
-		choicePnl.add(lblNewLabel_2);
+		
+		JComboBox sessionTypeText = new JComboBox();
+		sessionTypeText.setBounds(170, 168, 86, 20);
+		choicePnl.add(sessionTypeText);
+		
+		sessionTypeText.addItem("Cours Magistral");
+		sessionTypeText.addItem("TP");
+		sessionTypeText.addItem("TD");
+		sessionTypeText.addItem("Examen");
+		sessionTypeText.addItem("Rattrapage");
+		
+		
+		SessionDAO sessionDAO = new SessionDAO();
+		ArrayList<Session> listSession = sessionDAO.getList();
+		
+	
+		
+		JComboBox list_group = new JComboBox();
+		list_group.setBounds(170, 199, 88, 20);
+		choicePnl.add(list_group);
 
-		JComboBox List_parcours = new JComboBox();
-		List_parcours.setBounds(182, 196, 72, 20);
-		choicePnl.add(List_parcours);
+		GroupDAO groupDAO = new GroupDAO();
+		ArrayList<Group> listGroup = groupDAO.getList();
+		for (int i = 0; i < listGroup.size(); i++) {
+			list_group.addItem(listGroup.get(i).getGroup_number());
+		}
+		
+		JComboBox list_debut = new JComboBox();
+		list_debut.setBounds(168, 72, 86, 20);
+		choicePnl.add(list_debut);
+		
+		list_debut.addItem("08:30");
+		list_debut.addItem("09:00");
+		list_debut.addItem("09:30");
+		list_debut.addItem("10:00");
+		list_debut.addItem("10:30");
+		list_debut.addItem("11:00");
+		list_debut.addItem("11:30");
+		list_debut.addItem("12:00");
+		list_debut.addItem("12:30");
+		list_debut.addItem("13:00");
+		list_debut.addItem("13:30");
+		list_debut.addItem("14:00");
+		list_debut.addItem("14:30");
+		list_debut.addItem("15:00");
+		list_debut.addItem("15:30");
+		list_debut.addItem("16:00");
+		list_debut.addItem("16:30");
+		list_debut.addItem("17:00");
+		list_debut.addItem("17:30");
+		list_debut.addItem("18:00");
+		list_debut.addItem("18:30");
+		list_debut.addItem("19:00");
+		list_debut.addItem("19:30");
+		
+		
+		JComboBox list_fin = new JComboBox();
+		list_fin.setBounds(168, 103, 86, 20);
+		choicePnl.add(list_fin);
+		
+		
+		list_fin.addItem("08:30");
+		list_fin.addItem("09:00");
+		list_fin.addItem("09:30");
+		list_fin.addItem("10:00");
+		list_fin.addItem("10:30");
+		list_fin.addItem("11:00");
+		list_fin.addItem("11:30");
+		list_fin.addItem("12:00");
+		list_fin.addItem("12:30");
+		list_fin.addItem("13:00");
+		list_fin.addItem("13:30");
+		list_fin.addItem("14:00");
+		list_fin.addItem("14:30");
+		list_fin.addItem("15:00");
+		list_fin.addItem("15:30");
+		list_fin.addItem("16:00");
+		list_fin.addItem("16:30");
+		list_fin.addItem("17:00");
+		list_fin.addItem("17:30");
+		list_fin.addItem("18:00");
+		list_fin.addItem("18:30");
+		list_fin.addItem("19:00");
+		list_fin.addItem("19:30");
+		
+		calendar.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				System.out.println(calendar.getDate());
+				Calendar cal = Calendar.getInstance();
+			int day=cal.get(Calendar.DAY_OF_MONTH);
+			System.out.println(calendar.getDayChooser());
 
-		List_parcours.addItem("Classique");
-		List_parcours.addItem("Apprenti");
+	
+				SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+				String date = format1.format(calendar.getDate());
+				dateText.setText(""+date);
+				
+				
+				
+		
+				
+			}
+		});
 
-		JButton btnNewButton = new JButton("ADD STUDENT ");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton SessionAddButton = new JButton("ADD SESSION ");
+		SessionAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Student student = new Student(0, "", "", "", "", 0, "");
-				student.setName(name.getText());
-				student.setFirstName(firstname.getText());
-				student.setSector(List_parcours.getSelectedItem().toString());
-				System.out.println("fff");
-				System.out.println(Integer.parseInt(List_groups.getSelectedItem().toString()));
-				student.setGroup(Integer.parseInt(List_groups.getSelectedItem().toString()));
-				String mail= student.getFirstName()+"."+student.getName()+"@groupe-esigelec.org";
-				student.setMail(mail);
-				// Method to generate a random alphanumeric password of a specific length
-				int len = 5;
+			
+				
+				Session session = new Session(0, "", "", "", "", "", "","","",0);
+				session.setName(nomText.getText());
+				session.setStart(""+list_debut.getSelectedItem());
+				session.setEnd(""+list_fin.getSelectedItem());
+				session.setRoom(salleText.getText());
+				session.setDate(dateText.getText());
+				session.setType(""+(sessionTypeText.getSelectedIndex()+1));
+				session.setMatiere(""+cours.getIdcours());
+				session.setGroupe_number(Integer.parseInt(list_group.getSelectedItem().toString()));
+				
+				
+				
+				
+			
+				
 
-				// ASCII range – alphanumeric (0-9, a-z, A-Z)
-				final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-				SecureRandom random = new SecureRandom();
-				StringBuilder sb = new StringBuilder();
-
-				// each iteration of the loop randomly chooses a character from the given
-				// ASCII range and appends it to the `StringBuilder` instance
-
-				for (int i = 0; i < len; i++) {
-					int randomIndex = random.nextInt(chars.length());
-					sb.append(chars.charAt(randomIndex));
-				}
-				student.setPassword(sb.toString());
-				student.display();
-				StudentDAO studentDAO = new StudentDAO();
-				if(student.getName().length() == 0 || student.getFirstName().length() == 0) {
-					JOptionPane.showMessageDialog(null, " Entrez le nom et le prénom");
+			int drapeau=0;
+				//session.set
+				System.out.println(list_group.getSelectedItem().toString());;
+				SessionDAO sessionDAO = new SessionDAO();
+				if(list_debut.getSelectedIndex()>= list_fin.getSelectedIndex() ) {
+					JOptionPane.showMessageDialog(null, " l'heure de fin doit etre superieure à celle du debut ");
+					drapeau++;
 				}
 				else {
-					int returnValue=studentDAO.add(student); 
+					LocalTime heuredebut = LocalTime.parse(session.getStart()+":00");
+					LocalTime heurefin = LocalTime.parse(session.getEnd()+":00");
+					for (int i = 0; i < listSession.size(); i++) {
+						LocalTime startHour = LocalTime.parse(listSession.get(i).getStart()+":00");
+						LocalTime endHour = LocalTime.parse(listSession.get(i).getEnd()+":00");
+						if((heuredebut.isAfter(startHour) && heuredebut.isBefore(endHour)) && (heurefin.isAfter(startHour) && heurefin.isBefore(endHour)) && (session.getGroupe_number()== listSession.get(i).getGroupe_number()) && (session.getDate().equals(listSession.get(i).getDate())) ) {
+							JOptionPane.showMessageDialog(null, " Creneau non disponible pour ce groupe ");
+							drapeau++;
+
+							i =  listSession.size()+20;
+						}
+						
+
+					}
+					
+				}
+				if (drapeau==0){
+					int returnValue=sessionDAO.add(session); 
 					if(returnValue!=0) {
 						JOptionPane.showMessageDialog(null, "Enregistrement reussi");
 					}
@@ -134,37 +258,54 @@ public class AjouterSessionGUI {
 					}
 					
 					frame.dispose();
-					GestionELGUI GD = new GestionELGUI(ad); 
+					Planning p = new Planning();
 				}
 				
 
 			}
 		});
-		btnNewButton.setBackground(new Color(224, 255, 255));
-		btnNewButton.setForeground(new Color(178, 34, 34));
-		btnNewButton.setFont(new Font("Verdana Pro Cond Semibold", Font.PLAIN, 15));
-		btnNewButton.setBounds(101, 274, 216, 23);
-		choicePnl.add(btnNewButton);
+		SessionAddButton.setBackground(new Color(224, 255, 255));
+		SessionAddButton.setForeground(new Color(178, 34, 34));
+		SessionAddButton.setFont(new Font("Verdana Pro Cond Semibold", Font.PLAIN, 15));
+		SessionAddButton.setBounds(331, 477, 216, 23);
+		choicePnl.add(SessionAddButton);
 
-		GroupDAO groupDAO = new GroupDAO();
-		ArrayList<Group> listGroup = groupDAO.getList();
-		for (int i = 0; i < listGroup.size(); i++) {
-			List_groups.addItem(listGroup.get(i).getGroup_number());
+		JLabel finLabel = new JLabel("Heure de fin ");
+		finLabel.setBounds(75, 106, 85, 14);
+		choicePnl.add(finLabel);
 
-		}
-
-		firstname = new JTextField();
-		firstname.setColumns(10);
-		firstname.setBounds(168, 73, 86, 20);
-		choicePnl.add(firstname);
-
-		JLabel lblNewLabel_1_4 = new JLabel("Group");
-		lblNewLabel_1_4.setBounds(114, 168, 46, 14);
-		choicePnl.add(lblNewLabel_1_4);
-
-		JLabel lblNewLabel_1_4_1 = new JLabel("Sector");
-		lblNewLabel_1_4_1.setBounds(114, 199, 46, 14);
-		choicePnl.add(lblNewLabel_1_4_1);
+		JLabel groupeLabel = new JLabel("Groupe");
+		groupeLabel.setBounds(114, 202, 46, 14);
+		choicePnl.add(groupeLabel);
+		
+		salleText = new JTextField();
+		salleText.setColumns(10);
+		salleText.setBounds(168, 135, 86, 20);
+		choicePnl.add(salleText);
+		
+		dateText = new JTextField(""+cours.getName());
+		dateText.setEditable(false);
+		dateText.setColumns(10);
+		dateText.setBounds(413, 285, 86, 20);
+		choicePnl.add(dateText);
+		
+		JLabel salleLabel = new JLabel("Salle");
+		salleLabel.setBounds(114, 138, 46, 14);
+		choicePnl.add(salleLabel);
+		
+		JLabel sessionLabel = new JLabel("Choisir la date ");
+		sessionLabel.setBounds(318, 291, 85, 14);
+		choicePnl.add(sessionLabel);
+		
+		JLabel typeLabel = new JLabel("type de session");
+		typeLabel.setBounds(75, 171, 86, 14);
+		choicePnl.add(typeLabel);
+		
+		
+		
+	
+		
+		
 
 	}
 }

@@ -42,14 +42,15 @@ public class CourseDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("INSERT INTO course (idcourse ,name, totalTime, examTime, tDtime, tPtime, amphiTime, idteacher) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-			ps.setInt(1, cours.getIdCours());
+			ps = con.prepareStatement("INSERT INTO course (idcourse ,nom, totalTime, examTime, tDtime, tPtime, amphiTime, idteacher) VALUES(seq_course.nextVal, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setInt(1, cours.getIdcours());
 			ps.setString(2, cours.getName());
 			ps.setString(3, cours.getTotalTime());
 			ps.setString(4, cours.getExamTime());
 			ps.setString(5, cours.getTDtime());
 			ps.setString(6, cours.getTPtime());			
 			ps.setString(7, cours.getAmphiTime());
+			ps.setString(8, cours.getTeach_name());
 
 
 			// Execution de la requete
@@ -109,7 +110,7 @@ public class CourseDAO extends ConnectionDAO {
 			ps.setString(4, cours.getTDtime());
 			ps.setString(5, cours.getTPtime());			
 			ps.setString(6, cours.getAmphiTime());
-			ps.setInt(7, cours.getIdCours());
+			ps.setInt(7, cours.getIdcours());
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -212,7 +213,7 @@ public class CourseDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM course WHERE IDCOURSE = ?");
+			ps = con.prepareStatement("SELECT idcourse, nom, totalTime, examTime, tDtime, tPtime, amphiTime,teacher.firstname || ' ' || teacher.lastname AS teacher FROM course INNER JOIN teacher ON teacher.idteacher=course.idteacher WHERE idcourse = ?");
 			ps.setInt(1, id);
 	
 
@@ -228,7 +229,8 @@ public class CourseDAO extends ConnectionDAO {
 									       rs.getString("examTime"),
 									       rs.getString("tDtime"),
 									       rs.getString("tPtime"),
-									       rs.getString("amphiTime"));
+									       rs.getString("amphiTime"),
+									       rs.getString("teacher"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -271,7 +273,7 @@ public class CourseDAO extends ConnectionDAO {
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM course");
+			ps = con.prepareStatement("SELECT idcourse, nom, totalTime, examTime, tDtime, tPtime, amphiTime,teacher.firstname || ' ' || teacher.lastname AS teacher FROM course INNER JOIN teacher ON teacher.idteacher=course.idteacher");
 
 			// on execute la requete
 			rs = ps.executeQuery();
@@ -279,13 +281,14 @@ public class CourseDAO extends ConnectionDAO {
 			while (rs.next()) {
 				
 				
-				returnValue.add(new Course(rs.getInt("IDCOURSE"),
-					       rs.getString("name"),
+				returnValue.add(new Course(rs.getInt("idcourse"),
+					       rs.getString("nom"),
 					       rs.getString("totalTime"),
 					       rs.getString("examTime"),
 					       rs.getString("tDtime"),
 					       rs.getString("tPtime"),
-					       rs.getString("amphiTime")));
+					       rs.getString("amphiTime"),
+					       rs.getString("teacher")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

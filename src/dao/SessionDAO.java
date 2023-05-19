@@ -43,17 +43,18 @@ public class SessionDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
+		
 			
-			ps = con.prepareStatement("INSERT INTO seance (idseance,debut, fin,dateseance,room,name,idsession_type,groupe_number,id_course) VALUES(?, ?, ?, ?, ?, ?, ?,?,?)");
-			ps.setInt(1, sess.getIdsession());
-			ps.setString(2, sess.getStart());
-			ps.setString(3, sess.getEnd());
-			ps.setString(4, sess.getDate());
-			ps.setString(5, sess.getRoom());
-			ps.setString(6, sess.getName());
-			ps.setString(7, sess.getType());
-			ps.setInt(8, sess.getGroupe_number());
-			ps.setString(9, sess.getMatiere());
+			ps = con.prepareStatement("INSERT INTO seance (sessionname,fin,debut,room,idseance,idcourse,idsession_type,groupe_number,dateseance) VALUES(?, ?, ?,?,seq_session.nextVal,?,?,?,TO_DATE(?, 'YYYY-MM-DD'))");
+			ps.setString(1, sess.getName());
+			ps.setString(2, sess.getEnd());
+			ps.setString(3, sess.getStart());
+			ps.setString(4, sess.getRoom());
+			ps.setString(5, sess.getMatiere());
+			ps.setString(6, sess.getType());
+			ps.setInt(7, sess.getGroupe_number());
+			ps.setString(8, sess.getDate());
+			
 
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -104,7 +105,7 @@ public class SessionDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE seance set debut = ?, fin = ?, dateseance = ?, room= ?, name= ?,idsession_type=?, id_course=? ,WHERE idseance = ?");
+			ps = con.prepareStatement("UPDATE seance set debut = ?, fin = ?, dateseance = ?, room= ?, sessionname= ?,idsession_type=?, idcourse=? ,WHERE idseance = ?");
 
 			ps.setString(1, sess.getStart());
 			ps.setString(2, sess.getEnd());
@@ -216,7 +217,15 @@ public class SessionDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM seance WHERE idseance = ?");
+			ps = con.prepareStatement("SELECT idseance, TO_CHAR(dateseance, 'DD-MM-YYYY') AS dateseance, room,course.nom AS Matiere,debut,fin,session_type.nom AS Type,groupe.groupe_number AS groupe,sessionname,teacher.firstname || ' ' || teacher.lastname AS teacher \\r\\n\"\r\n"
+					+ "					+ \"FROM session_type INNER JOIN seance \\r\\n\"\r\n"
+					+ "					+ \"ON session_type.idsession_type=seance.idsession_type\\r\\n\"\r\n"
+					+ "					+ \"INNER JOIN course \\r\\n\"\r\n"
+					+ "					+ \"ON seance.idcourse=course.idcourse\\r\\n\"\r\n"
+					+ "					+ \"INNER JOIN groupe\\r\\n\"\r\n"
+					+ "					+ \"ON seance.groupe_number= groupe.groupe_number\\r\\n\"\r\n"
+					+ "					+ \"INNER JOIN teacher\\r\\n\"\r\n"
+					+ "					+ \"ON course.idteacher=teacher.idteacher WHERE idseance = ?");
 			ps.setInt(1, id);
 	
 		//	int idsession, String start, String end, String date, String room, String name, String type,
@@ -227,15 +236,15 @@ public class SessionDAO extends ConnectionDAO {
 			if (rs.next()) {
 				System.out.println("ID"+rs.getInt("idseance"));
 				returnValue = new Session(rs.getInt("idseance"),
-									       rs.getString("debut"),
-									       rs.getString("fin"),
-									       rs.getString("dateseance"),
-									       rs.getString("room"),
-									       rs.getString("name"),
-									       rs.getString("idsession_type"),
-									       rs.getString("id_course"),
-									       rs.getString("teach_name"),
-									       rs.getInt("groupe_number"));
+					       rs.getString("debut"),
+					       rs.getString("fin"),
+					       rs.getString("dateseance"),
+					       rs.getString("room"),
+					       rs.getString("sessionname"),
+					       rs.getString("type"),
+					       rs.getString("Matiere"),
+					       rs.getString("teacher"),
+					       rs.getInt("groupe"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -278,7 +287,15 @@ public class SessionDAO extends ConnectionDAO {
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM seance");
+			ps = con.prepareStatement("SELECT idseance, TO_CHAR(dateseance, 'DD-MM-YYYY') AS dateseance, room,course.nom AS Matiere,debut,fin,session_type.nom AS Type,groupe.groupe_number AS groupe,sessionname,teacher.firstname || ' ' || teacher.lastname AS teacher \r\n"
+					+ "FROM session_type INNER JOIN seance \r\n"
+					+ "ON session_type.idsession_type=seance.idsession_type\r\n"
+					+ "INNER JOIN course \r\n"
+					+ "ON seance.idcourse=course.idcourse\r\n"
+					+ "INNER JOIN groupe\r\n"
+					+ "ON seance.groupe_number= groupe.groupe_number\r\n"
+					+ "INNER JOIN teacher\r\n"
+					+ "ON course.idteacher=teacher.idteacher");
 
 			// on execute la requete
 			rs = ps.executeQuery();
@@ -291,11 +308,11 @@ public class SessionDAO extends ConnectionDAO {
 					       rs.getString("fin"),
 					       rs.getString("dateseance"),
 					       rs.getString("room"),
-					       rs.getString("name"),
-					       rs.getString("idsession_type"),
-					       rs.getString("id_course"),
-					       rs.getString("teach_name"),
-					       rs.getInt("groupe_number")));
+					       rs.getString("sessionname"),
+					       rs.getString("type"),
+					       rs.getString("Matiere"),
+					       rs.getString("teacher"),
+					       rs.getInt("groupe")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -329,6 +346,128 @@ public class SessionDAO extends ConnectionDAO {
 	 * @throws SQLException si une erreur se produit lors de la communication avec la BDD
 	 */
 	
+	public ArrayList<Session> getListTeacher(int idteacher) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Session> returnValue = new ArrayList<Session>();
+		
+
+		// connexion a la base de donnees
+		try {
+			con = DriverManager.getConnection(URL, LOGIN, PASS);
+			ps = con.prepareStatement("SELECT idseance, TO_CHAR(dateseance, 'DD-MM-YYYY') AS dateseance, room,course.nom AS Matiere,debut,fin,session_type.nom AS Type,groupe.groupe_number AS groupe,sessionname,teacher.firstname || ' ' || teacher.lastname AS teacher \r\n"
+					+ "FROM session_type INNER JOIN seance \r\n"
+					+ "ON session_type.idsession_type=seance.idsession_type\r\n"
+					+ "INNER JOIN course \r\n"
+					+ "ON seance.idcourse=course.idcourse\r\n"
+					+ "INNER JOIN groupe\r\n"
+					+ "ON seance.groupe_number= groupe.groupe_number\r\n"
+					+ "INNER JOIN teacher\r\n"
+					+ "ON course.idteacher=teacher.idteacher WHERE teacher.idteacher=?");
+			ps.setInt(1, idteacher);
+			
+
+			// on execute la requete
+			rs = ps.executeQuery();
+			// on parcourt les lignes du resultat
+			while (rs.next()) {
+				
+				
+				returnValue.add(new Session(rs.getInt("idseance"),
+					       rs.getString("debut"),
+					       rs.getString("fin"),
+					       rs.getString("dateseance"),
+					       rs.getString("room"),
+					       rs.getString("sessionname"),
+					       rs.getString("type"),
+					       rs.getString("Matiere"),
+					       rs.getString("teacher"),
+					       rs.getInt("groupe")));
+			}
+		} catch (Exception ee) {
+			ee.printStackTrace();
+		} finally {
+			// fermeture du rs, du preparedStatement et de la connexion
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception ignore) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception ignore) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception ignore) {
+			}
+		}
+		return returnValue;
+	}
 	
+	public ArrayList<Session> getListGroupe(int idgroupe) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Session> returnValue = new ArrayList<Session>();
+		
+
+		// connexion a la base de donnees
+		try {
+			con = DriverManager.getConnection(URL, LOGIN, PASS);
+			ps = con.prepareStatement("SELECT idseance, TO_CHAR(dateseance, 'DD-MM-YYYY') AS dateseance, room,course.nom AS Matiere,debut,fin,session_type.nom AS Type,groupe.groupe_number AS groupe,sessionname,teacher.firstname || ' ' || teacher.lastname AS teacher \r\n"
+					+ "FROM session_type INNER JOIN seance \r\n"
+					+ "ON session_type.idsession_type=seance.idsession_type\r\n"
+					+ "INNER JOIN course \r\n"
+					+ "ON seance.idcourse=course.idcourse\r\n"
+					+ "INNER JOIN groupe\r\n"
+					+ "ON seance.groupe_number= groupe.groupe_number\r\n"
+					+ "INNER JOIN teacher\r\n"
+					+ "ON course.idteacher=teacher.idteacher WHERE groupe.groupe_number=?");
+			ps.setInt(1, idgroupe);
+			
+
+			// on execute la requete
+			rs = ps.executeQuery();
+			// on parcourt les lignes du resultat
+			while (rs.next()) {
+				
+				
+				returnValue.add(new Session(rs.getInt("idseance"),
+					       rs.getString("debut"),
+					       rs.getString("fin"),
+					       rs.getString("dateseance"),
+					       rs.getString("room"),
+					       rs.getString("sessionname"),
+					       rs.getString("type"),
+					       rs.getString("Matiere"),
+					       rs.getString("teacher"),
+					       rs.getInt("groupe")));
+			}
+		} catch (Exception ee) {
+			ee.printStackTrace();
+		} finally {
+			// fermeture du rs, du preparedStatement et de la connexion
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception ignore) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception ignore) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception ignore) {
+			}
+		}
+		return returnValue;
+	}
 	
 }

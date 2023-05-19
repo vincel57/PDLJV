@@ -19,6 +19,7 @@ import com.toedter.calendar.demo.DemoTable;
 import java.awt.BorderLayout;
 import com.toedter.plaf.JCalendarTheme;
 
+import dao.SessionDAO;
 import dao.StudentDAO;
 import model.Student;
 import oracle.sql.DATE;
@@ -85,7 +86,6 @@ public class Planning {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		Session se= new Session(4,"08h","9h","17/05/2001","D1287","rhhh","TP","ATS","CABOT",2);
 		JLabel titre = new JLabel("Date du jour");
 		titre.setBounds(439, 28, 90, 14);
 		frame.getContentPane().add(titre);
@@ -94,7 +94,8 @@ public class Planning {
 		
 		JCalendar calendar = new JCalendar();
 	
-		
+		SessionDAO sessionDAO = new SessionDAO();
+		ArrayList<Session> listSession = sessionDAO.getList();
 				
 				
 		calendar.addPropertyChangeListener(new PropertyChangeListener() {
@@ -112,6 +113,43 @@ public class Planning {
 				
 
 			//	System.out.println(date);
+				Session se= new Session(4,"08h","9h","17/05/2001","D1287","rhhh","TP","ATS","CABOT",2);
+
+				JPanel panel = new JPanel();
+				GridLayout gl_panel = new GridLayout(5, 1);
+				gl_panel.setVgap(15);
+				panel.setLayout(gl_panel);
+				for (int i = 0; i < listSession.size(); i++) {
+					/*SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+					String date = format.format(se.getDate());*/
+					se = listSession.get(i);
+					JTextArea textArea1 = new JTextArea(se.getType()+"\r\n"+se.getMatiere()+"\r\n"+se.getRoom()+"\r\n"+se.getStart()+"-"+se.getEnd()+"\r\n"+se.getDate()+"\r\n"+se.getTeach_name());
+					textArea1.setEditable(false);
+					textArea1.setName(""+se.getIdsession());
+					
+					
+					
+					textArea1.addMouseListener(new MouseAdapter() {
+			            public void mouseClicked(MouseEvent e) {
+			 
+			            	Object source = e.getSource();
+			                if (source instanceof JTextArea) {
+			                    JTextArea clickedTextArea = (JTextArea) source;
+			                    String text = clickedTextArea.getName();
+			                    System.out.println("Clicked Text: " + text);
+			                }
+			            	
+			            }
+			        });
+					if(date.contains(se.getDate())) {
+						panel.add(textArea1);
+					}
+					
+				}
+
+				JScrollPane scrollPane = new JScrollPane(panel);
+				scrollPane.setBounds(374, 53, 392, 359);
+				frame.getContentPane().add(scrollPane);
 				
 			}
 		});
@@ -125,35 +163,8 @@ public class Planning {
 		
 		
 		
-		JPanel panel = new JPanel();
-		GridLayout gl_panel = new GridLayout(5, 1);
-		gl_panel.setVgap(15);
-		panel.setLayout(gl_panel);
 
-		JTextArea textArea1 = new JTextArea(se.getType()+"\r\n"+se.getName()+"\r\n"+se.getRoom()+"\r\n"+se.getStart()+"-"+se.getEnd()+"\r\n"+2);
-		textArea1.setEditable(false);
-		textArea1.setName(""+1);
-		JTextArea textArea2 = new JTextArea(se.getType()+"\r\n"+se.getName()+"\r\n"+se.getRoom()+"\r\n"+se.getStart()+"-"+se.getEnd()+"\r\n"+3);
-		textArea2.setEditable(false);
-		panel.add(textArea1);
-		panel.add(textArea2);
-
-		JScrollPane scrollPane = new JScrollPane(panel);
-		scrollPane.setBounds(374, 53, 392, 359);
-		frame.getContentPane().add(scrollPane);
-
-		textArea1.addMouseListener(new MouseAdapter() {
-	            public void mouseClicked(MouseEvent e) {
-	 
-	            	Object source = e.getSource();
-	                if (source instanceof JTextArea) {
-	                    JTextArea clickedTextArea = (JTextArea) source;
-	                    String text = clickedTextArea.getName();
-	                    System.out.println("Clicked Text: " + text);
-	                }
-	            	
-	            }
-	        });
+	
 		// Ajouter le JSplitPane à un autre conteneur principal
 
 		//se.getType()+"\r\n"+se.getName()+"\r\n"+se.getRoom()+"\r\n"+se.getStart()+"-"+se.getEnd()

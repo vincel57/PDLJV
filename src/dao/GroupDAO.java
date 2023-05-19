@@ -145,7 +145,7 @@ public class GroupDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
 			// le getter permet de recuperer la valeur de l'ID du group
-			ps = con.prepareStatement("DELETE FROM group WHERE id = ?");
+			ps = con.prepareStatement("DELETE FROM groupe WHERE id = ?");
 			ps.setInt(1, id);
 
 			// Execution de la requete
@@ -200,7 +200,7 @@ public class GroupDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM gestionnaire WHERE groupe_number= ?");
+			ps = con.prepareStatement("SELECT * FROM groupe WHERE groupe_number= ?");
 			ps.setInt(1, id);
 			
 
@@ -212,7 +212,7 @@ public class GroupDAO extends ConnectionDAO {
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
 				returnValue = new Group(rs.getInt("GROUPE_NUMBER"),	     
-									       rs.getInt("CAPACITY"));
+									       rs.getInt("capacite"));
 				returnValue.display();
 			}
 			
@@ -264,7 +264,7 @@ public class GroupDAO extends ConnectionDAO {
 			while (rs.next()) {
 				
 				returnValue.add(new Group(rs.getInt("groupe_number"),	     
-					       rs.getInt("CAPACITY")));
+					       rs.getInt("capacite")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

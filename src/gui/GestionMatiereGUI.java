@@ -64,37 +64,39 @@ public class GestionMatiereGUI {
 	private void initialize(Admin ad) {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(248, 248, 255));
-		frame.setBounds(100, 100, 758, 531);
+		frame.setBounds(100, 100, 954, 605);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JButton btnNewButton_2 = new JButton("AJOUTER");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				frame.dispose();
+				AjouterCoursGUI hg = new AjouterCoursGUI(ad);
+				
 				
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(21, 59, 612, 422);
+		scrollPane.setBounds(43, 69, 753, 422);
 		frame.getContentPane().add(scrollPane);
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Lastname", "Firstname", "Email", "Group", "Sector"
+				"Matiere", "totalTime", "examTime", "tDtime", "tPtime", "amphiTime","Enseignant"
+			
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, Integer.class, String.class
+				Integer.class, String.class, String.class, String.class, Integer.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				true, false, false, true, false, false
+				true, false, false, true, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -106,13 +108,13 @@ public class GestionMatiereGUI {
 		CourseDAO studentDAO = new CourseDAO();
 		ArrayList<Course> listCourse = studentDAO.getList();
 		for (int i = 0; i < listCourse.size(); i++) {
-				model.addRow(new Object [] {});
+				model.addRow(new Object [] {listCourse.get(i).getName(), listCourse.get(i).getTotalTime(), listCourse.get(i).getExamTime(),listCourse.get(i).getTDtime(),listCourse.get(i).getTPtime(),listCourse.get(i).getAmphiTime(),listCourse.get(i).getTeach_name() });
 				
 		} 
 		
 		btnNewButton_2.setBackground(new Color(135, 206, 250));
 		btnNewButton_2.setForeground(new Color(139, 0, 0));
-		btnNewButton_2.setBounds(643, 375, 89, 23);
+		btnNewButton_2.setBounds(821, 372, 89, 23);
 		frame.getContentPane().add(btnNewButton_2);
 		
 		JButton btnNewButton_2_1 = new JButton("SUPPRIMER");
@@ -131,7 +133,7 @@ public class GestionMatiereGUI {
 		btnNewButton_2_1.setFont(new Font("Verdana Pro Cond", Font.BOLD, 11));
 		btnNewButton_2_1.setForeground(new Color(178, 34, 34));
 		btnNewButton_2_1.setBackground(new Color(135, 206, 250));
-		btnNewButton_2_1.setBounds(643, 419, 89, 23);
+		btnNewButton_2_1.setBounds(821, 440, 89, 23);
 		frame.getContentPane().add(btnNewButton_2_1);
 		
 		
@@ -152,10 +154,10 @@ public class GestionMatiereGUI {
 		});
 		btnNewButton_2_1_1.setForeground(new Color(178, 34, 34));
 		btnNewButton_2_1_1.setBackground(new Color(135, 206, 250));
-		btnNewButton_2_1_1.setBounds(643, 396, 89, 23);
+		btnNewButton_2_1_1.setBounds(821, 406, 89, 23);
 		frame.getContentPane().add(btnNewButton_2_1_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("GESTION DES ELEVES");
+		JLabel lblNewLabel_1 = new JLabel("GESTION DES COURS");
 		lblNewLabel_1.setFont(new Font("Verdana Pro Cond Black", Font.PLAIN, 28));
 		lblNewLabel_1.setBackground(new Color(175, 238, 238));
 		lblNewLabel_1.setForeground(new Color(178, 34, 34));
@@ -179,6 +181,23 @@ public class GestionMatiereGUI {
 		btnNewButton_2_1_2.setBackground(new Color(135, 206, 250));
 		btnNewButton_2_1_2.setBounds(10, 11, 89, 23);
 		frame.getContentPane().add(btnNewButton_2_1_2);
+		
+		JButton SessionAddButton = new JButton("ADD SESSION");
+		SessionAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(table.getSelectedRow()< 0 || table.getSelectedRow() >= listCourse.size()) {
+					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un cours");
+				}
+				else {
+					AjouterSessionGUI s= new AjouterSessionGUI(ad,listCourse.get(table.getSelectedRow()));
+				
+					frame.dispose();
+				
+				}
+			}
+		});
+		SessionAddButton.setBounds(314, 532, 195, 23);
+		frame.getContentPane().add(SessionAddButton);
 		
 		
 		
