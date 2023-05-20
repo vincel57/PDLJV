@@ -34,7 +34,7 @@ import java.util.Calendar;
 
 import com.toedter.calendar.JCalendar;
 
-public class AjouterSessionGUI {
+public class ModifierSessionGUI {
 
 	private JFrame frame;
 	private JTextField nomText;
@@ -49,9 +49,9 @@ public class AjouterSessionGUI {
 			public void run() {
 				try {
 					Admin ad = new Admin(0,"0","0","0","0");
-					Course cours = new Course(0, "", "", "", "", "", "","");
-
-					AjouterSessionGUI window = new AjouterSessionGUI(ad,cours);
+					Session session = new Session(0, "", "", "", "", "", "","","",0);
+				
+					ModifierSessionGUI window = new ModifierSessionGUI(ad,session);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,15 +63,15 @@ public class AjouterSessionGUI {
 	/**
 	 * Create the application.
 	 */
-	public AjouterSessionGUI(Admin ad, Course cours) {
-		initialize(ad,cours);
+	public ModifierSessionGUI(Admin ad, Session session	) {
+		initialize(ad,session);
 		frame.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Admin ad, Course cours) {
+	private void initialize(Admin ad, Session session) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 868, 601);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +83,7 @@ public class AjouterSessionGUI {
 		calendar.setBounds(342, 316, 205, 153);
 		choicePnl.add(calendar);
 
-		nomText = new JTextField();
+		nomText = new JTextField(session.getName());
 		nomText.setBounds(170, 29, 86, 20);
 		choicePnl.add(nomText);
 		nomText.setColumns(10);
@@ -201,7 +201,7 @@ public class AjouterSessionGUI {
 			}
 		});
 
-		JButton SessionAddButton = new JButton("ADD SESSION ");
+		JButton SessionAddButton = new JButton("UPDATE SESSION ");
 		SessionAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
@@ -213,7 +213,7 @@ public class AjouterSessionGUI {
 				session.setRoom(salleText.getText());
 				session.setDate(dateText.getText());
 				session.setType(""+(sessionTypeText.getSelectedIndex()+1));
-				session.setMatiere(""+cours.getIdcours());
+				session.setMatiere(session.getMatiere());
 				session.setGroupe_number(Integer.parseInt(list_group.getSelectedItem().toString()));
 				
 				
@@ -249,12 +249,12 @@ public class AjouterSessionGUI {
 					
 				}
 				if (drapeau==0){
-					int returnValue=sessionDAO.add(session); 
+					int returnValue=sessionDAO.update(session); 
 					if(returnValue!=0) {
-						JOptionPane.showMessageDialog(null, "Enregistrement reussi");
+						JOptionPane.showMessageDialog(null, "Modification reussi");
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "Enregistrement raté");
+						JOptionPane.showMessageDialog(null, "Modification raté");
 					}
 					
 					frame.dispose();
@@ -278,12 +278,12 @@ public class AjouterSessionGUI {
 		groupeLabel.setBounds(114, 202, 46, 14);
 		choicePnl.add(groupeLabel);
 		
-		salleText = new JTextField();
+		salleText = new JTextField(session.getRoom());
 		salleText.setColumns(10);
 		salleText.setBounds(168, 135, 86, 20);
 		choicePnl.add(salleText);
 		
-		dateText = new JTextField(""+cours.getName());
+		dateText = new JTextField(""+session.getDate());
 		dateText.setEditable(false);
 		dateText.setColumns(10);
 		dateText.setBounds(413, 285, 86, 20);

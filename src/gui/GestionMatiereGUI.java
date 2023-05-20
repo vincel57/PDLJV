@@ -125,6 +125,7 @@ public class GestionMatiereGUI {
 				}
 				else {
 					frame.dispose();
+					SupprimerCourseGUI s = new SupprimerCourseGUI(listCourse.get(table.getSelectedRow()),ad);
 					
 				}
 				
@@ -145,7 +146,9 @@ public class GestionMatiereGUI {
 					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un élève");
 				}
 				else {
+					
 					frame.dispose();
+					ModifierMatiereGUI j = new ModifierMatiereGUI(listCourse.get(table.getSelectedRow()),ad);
 				
 				}
 			
@@ -198,6 +201,16 @@ public class GestionMatiereGUI {
 		});
 		SessionAddButton.setBounds(314, 532, 195, 23);
 		frame.getContentPane().add(SessionAddButton);
+		
+		JButton SessionAddButton_1 = new JButton("Planning");
+		SessionAddButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				Planning p = new Planning(ad);
+			}
+		});
+		SessionAddButton_1.setBounds(733, 34, 195, 23);
+		frame.getContentPane().add(SessionAddButton_1);
 		
 		
 		

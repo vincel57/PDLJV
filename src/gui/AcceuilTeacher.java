@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
+import dao.StudentDAO;
 import model.Teacher;
 
 public class AcceuilTeacher {
@@ -104,6 +104,8 @@ public class AcceuilTeacher {
 		JButton btnAbsences = new JButton("Appel");
 		btnAbsences.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				SelectionGroupeGUI s = new SelectionGroupeGUI(teach);
+				
 			}
 		});
 		btnAbsences.setForeground(new Color(0, 0, 0));

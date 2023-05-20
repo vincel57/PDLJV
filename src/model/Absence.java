@@ -3,21 +3,21 @@ package model;
 public class Absence {
 	
 	private String type;
-	private String hour;
+	private String student;
 	private String date;
 	private String duration;
 	private int idabsence;
-	private boolean isJustified;
+
 	
 	
-		public Absence(int idabsence,String type, String hour, String date, String duration, boolean isJustified) {
+		public Absence(int idabsence,String type, String student, String date, String duration) {
 		super();
 		this.idabsence= idabsence;
 		this.type = type;
-		this.hour = hour;
+		this.student = student;
 		this.date = date;
 		this.duration = duration;
-		this.isJustified = isJustified;
+		
 	}
 		
 		
@@ -31,11 +31,11 @@ public class Absence {
 		public void setType(String type) {
 			this.type = type;
 		}
-		public String getHour() {
-			return hour;
+		public String getStudent() {
+			return student;
 		}
-		public void setHour(String hour) {
-			this.hour = hour;
+		public void setStudent(String student) {
+			this.student = student;
 		}
 		public String getDate() {
 			return date;

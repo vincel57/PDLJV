@@ -97,7 +97,10 @@ public class GroupDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("SELECT * FROM student WHERE groupe_number= ?");
+			ps = con.prepareStatement(" SELECT lastname, firstname\r\n"
+					+ " FROM groupe INNER JOIN student \r\n"
+					+ " ON groupe.groupe_number= student.groupe_number\r\n"
+					+ " WHERE groupe.groupe_number=?");
 			ps.setInt(1,groupe_number);
 			
 			

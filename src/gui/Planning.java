@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.EventQueue;
+
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -11,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+
+import model.Admin;
 import model.Session;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,8 +63,8 @@ public class Planning {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-				
-					Planning window = new Planning();
+					Admin ad = new Admin(0,"0","0","0","0");
+					Planning window = new Planning(ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,14 +76,15 @@ public class Planning {
 	/**
 	 * Create the application.
 	 */
-	public Planning() {
-		initialize();
+	public Planning(Admin ad) {
+		initialize(ad);
+		frame.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Admin ad) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 971, 614);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,8 +124,7 @@ public class Planning {
 				gl_panel.setVgap(15);
 				panel.setLayout(gl_panel);
 				for (int i = 0; i < listSession.size(); i++) {
-					/*SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-					String date = format.format(se.getDate());*/
+				
 					se = listSession.get(i);
 					JTextArea textArea1 = new JTextArea(se.getType()+"\r\n"+se.getMatiere()+"\r\n"+se.getRoom()+"\r\n"+se.getStart()+"-"+se.getEnd()+"\r\n"+se.getDate()+"\r\n"+se.getTeach_name());
 					textArea1.setEditable(false);

@@ -1,14 +1,18 @@
 package gui;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Font;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dao.AdminDAO;
 import dao.GroupDAO;
 import dao.TeacherDAO;
 import dao.CourseDAO;
@@ -17,24 +21,16 @@ import model.Group;
 import model.Teacher;
 import model.Course;
 
-import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.awt.event.ActionEvent;
 
-public class AjouterCoursGUI {
+public class ModifierMatiereGUI {
 
 	private JFrame frame;
-	private JTextField matiereText;
-	private JTextField totalTimeText;
-	private JTextField examTimeText;
-	private JTextField tdTimeText;
-	private JTextField tpTimeText;
-	private JTextField amphiTimeText;
+	private JTextField nameText;
+	private Course cours;
 
 	/**
 	 * Launch the application.
@@ -43,8 +39,9 @@ public class AjouterCoursGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Course cours = new Course(8, "", "", "", "", "", "","");
 					Admin ad = new Admin(0,"0","0","0","0");
-					AjouterCoursGUI window = new AjouterCoursGUI(ad);
+					ModifierMatiereGUI window = new ModifierMatiereGUI(cours, ad);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,15 +53,16 @@ public class AjouterCoursGUI {
 	/**
 	 * Create the application.
 	 */
-	public AjouterCoursGUI(Admin ad) {
-		initialize(ad);
+	public ModifierMatiereGUI(Course cours, Admin ad) {
+		initialize(cours,ad);
 		frame.setVisible(true);
+		cours.display();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Admin ad) {
+	private void initialize(Course cours, Admin ad) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 361);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,11 +70,39 @@ public class AjouterCoursGUI {
 		frame.getContentPane().add(choicePnl);
 		choicePnl.setLayout(null);
 
-		matiereText = new JTextField();
+		JTextField matiereText = new JTextField(cours.getName());
 		matiereText.setBounds(168, 42, 86, 20);
 		choicePnl.add(matiereText);
 		matiereText.setColumns(10);
+		
+
+		JTextField totalTimeText = new JTextField(cours.getTotalTime());
+		totalTimeText.setColumns(10);
+		totalTimeText.setBounds(168, 73, 86, 20);
+		choicePnl.add(totalTimeText);
 		//"Matiere", "totalTime", "examTime", "tDtime", "tPtime", "amphiTime","Enseignant"
+		
+		JTextField examTimeText = new JTextField(cours.getExamTime());
+		examTimeText.setColumns(10);
+		examTimeText.setBounds(168, 104, 86, 20);
+		choicePnl.add(examTimeText);
+		
+		JTextField	tdTimeText = new JTextField(cours.getTDtime());
+		tdTimeText.setColumns(10);
+		tdTimeText.setBounds(168, 135, 86, 20);
+		choicePnl.add(tdTimeText);
+		
+		JTextField tpTimeText = new JTextField(cours.getTPtime());
+		tpTimeText.setColumns(10);
+		tpTimeText.setBounds(168, 166, 86, 20);
+		choicePnl.add(tpTimeText);
+		
+
+		JTextField	amphiTimeText = new JTextField(cours.getAmphiTime());
+		amphiTimeText.setColumns(10);
+		amphiTimeText.setBounds(168, 206, 86, 20);
+		choicePnl.add(amphiTimeText);
+		
 
 		JLabel matiereLabel = new JLabel("Matiere");
 		matiereLabel.setBounds(114, 45, 46, 14);
@@ -99,22 +125,23 @@ public class AjouterCoursGUI {
 		}
 		
 
-		JButton CourseAddButton = new JButton("ADD COURSE ");
+		JButton CourseAddButton = new JButton("UPDATE COURSE ");
+
+		
 		CourseAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/*int idcours, String name, String totalTime, String examTime, String tDtime, String tPtime,
 				String amphiTime, String teach_name*/
-				Course cours = new Course(0, "", "", "", "", "", "","");
+				Course cours = new Course(8, "", "", "", "", "", "","");
 				cours.setName(matiereText.getText());
 				cours.setTotalTime(totalTimeText.getText());
-				cours.setExamTime(tdTimeText.getText());
 				cours.setTDtime(tdTimeText.getText());
 				cours.setTPtime(tpTimeText.getText());
 				cours.setAmphiTime(amphiTimeText.getText());
-			
-				List_teach.getSelectedIndex();
 				cours.setTeach_name(""+listTeacher.get(List_teach.getSelectedIndex()).getId());
-
+				
+			
+		
 
 			
 				//cours.set
@@ -124,7 +151,7 @@ public class AjouterCoursGUI {
 					JOptionPane.showMessageDialog(null, " Entrez le nom de la matiere");
 				}
 				else {
-					int returnValue=coursDAO.add(cours); 
+					int returnValue=coursDAO.update(cours);
 					if(returnValue!=0) {
 						JOptionPane.showMessageDialog(null, "Enregistrement reussi");
 					}
@@ -147,10 +174,6 @@ public class AjouterCoursGUI {
 
 	
 
-		totalTimeText = new JTextField();
-		totalTimeText.setColumns(10);
-		totalTimeText.setBounds(168, 73, 86, 20);
-		choicePnl.add(totalTimeText);
 
 		JLabel examTimeLabel = new JLabel("examtime");
 		examTimeLabel.setBounds(114, 107, 46, 14);
@@ -160,20 +183,7 @@ public class AjouterCoursGUI {
 		teacherLabel.setBounds(114, 240, 46, 14);
 		choicePnl.add(teacherLabel);
 		
-		examTimeText = new JTextField();
-		examTimeText.setColumns(10);
-		examTimeText.setBounds(168, 104, 86, 20);
-		choicePnl.add(examTimeText);
 		
-		tdTimeText = new JTextField();
-		tdTimeText.setColumns(10);
-		tdTimeText.setBounds(168, 135, 86, 20);
-		choicePnl.add(tdTimeText);
-		
-		tpTimeText = new JTextField();
-		tpTimeText.setColumns(10);
-		tpTimeText.setBounds(168, 166, 86, 20);
-		choicePnl.add(tpTimeText);
 		
 		JLabel tdTimeLabel = new JLabel("tdtime");
 		tdTimeLabel.setBounds(114, 138, 46, 14);
@@ -198,10 +208,7 @@ public class AjouterCoursGUI {
 		amphiTimeLabel.setBounds(101, 205, 59, 14);
 		choicePnl.add(amphiTimeLabel);
 		
-		amphiTimeText = new JTextField();
-		amphiTimeText.setColumns(10);
-		amphiTimeText.setBounds(168, 206, 86, 20);
-		choicePnl.add(amphiTimeText);
+	
 
 	}
 }

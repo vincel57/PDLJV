@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import model.*;
 
 /**
- * Classe d'acces aux donnees contenues dans la table group
+ * Classe d'acces aux donnees contenues dans la table absence
  * 
  * @author ESIGELEC - TIC Department
  * @version 2.0
@@ -19,13 +19,13 @@ public class AbsenceDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet d'ajouter un group dans la table group.
+	 * Permet d'ajouter un absence dans la table absence.
 	 * Le mode est auto-commit par defaut : chaque insertion est validee
 	 * 
-	 * @param group le group a ajouter
+	 * @param absence le absence a ajouter
 	 * @return retourne le nombre de lignes ajoutees dans la table
 	 */
-	public int add(Group group) {
+	public int add(Absence absence) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
@@ -39,14 +39,19 @@ public class AbsenceDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			
-			
 		
-			ps = con.prepareStatement("INSERT INTO Absence (groupe_number,capacity) VALUES(?, ?)");
+		
+			ps = con.prepareStatement("INSERT INTO Absence (IDSTUDENT,IDABSENCE,IDABSENCE_TYPE,DURE,JOUR) VALUES(?,seq_absence.nextVal,?,?,?)");
 			
 			
-			ps.setInt(1, group.getGroup_number());
-			ps.setInt(2, group.getCapacity());
+			ps.setString(1, absence.getStudent());
+			ps.setString(2, absence.getType());
+			ps.setString(2, absence.getDuration());		
+			ps.setString(2, absence.getDate());
+	
+
+			
+
 		
 		
 			
@@ -56,7 +61,7 @@ public class AbsenceDAO extends ConnectionDAO {
 
 		} catch (Exception e) {
 			if (e.getMessage().contains("ORA-00001"))
-				System.out.println("Cet identifiant de group existe déjà. Ajout impossible !");
+				System.out.println("Cet identifiant de absence existe déjà. Ajout impossible !");
 			else
 				e.printStackTrace();
 		} finally {
@@ -78,28 +83,31 @@ public class AbsenceDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de modifier un group dans la table group.
+	 * Permet de modifier un absence dans la table absence.
 	 * Le mode est auto-commit par defaut : chaque modification est validee
 	 * 
-	 * @param group le group a modifier
+	 * @param absence le absence a modifier
 	 * @return retourne le nombre de lignes modifiees dans la table
 	 */
-	public int update(Group group) {
+	public int update(Absence absence) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int returnValue = 0;
 
 		// connexion a la base de donnees
 		try {
-
 			// tentative de connexion
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
-			ps = con.prepareStatement("UPDATE group set name = ?, firstName = ?, mail = ?, password= ? WHERE id = ?");
-			ps.setInt(1, group.getGroup_number());
-			ps.setInt(2, group.getCapacity());
+			ps = con.prepareStatement("UPDATE absence set IDSTUDENT = ?, IDABSENCE_TYPE = ?, DURE = ?, JOUR= ? WHERE IDABSENCE = ?");
+			ps.setString(1, absence.getStudent());
+			ps.setString(2, absence.getType());
+			ps.setString(3, absence.getDuration());		
+			ps.setString(4, absence.getDate());
+			ps.setString(5, absence.getStudent());
+
 			
 			// Execution de la requete
 			returnValue = ps.executeUpdate();
@@ -125,11 +133,11 @@ public class AbsenceDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de supprimer un group par id dans la table group.
+	 * Permet de supprimer un absence par id dans la table absence.
 	 * Si ce dernier possede des articles, la suppression n'a pas lieu.
 	 * Le mode est auto-commit par defaut : chaque suppression est validee
 	 * 
-	 * @param id l'id du group à supprimer
+	 * @param id l'id du absence à supprimer
 	 * @return retourne le nombre de lignes supprimees dans la table
 	 */
 	public int delete(int id) {
@@ -144,8 +152,8 @@ public class AbsenceDAO extends ConnectionDAO {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
 			// preparation de l'instruction SQL, le ? represente la valeur de l'ID
 			// a communiquer dans la suppression.
-			// le getter permet de recuperer la valeur de l'ID du group
-			ps = con.prepareStatement("DELETE FROM group WHERE id = ?");
+			// le getter permet de recuperer la valeur de l'ID du absence
+			ps = con.prepareStatement("DELETE FROM absence WHERE IDABSENCE = ?");
 			ps.setInt(1, id);
 
 			// Execution de la requete
@@ -153,7 +161,7 @@ public class AbsenceDAO extends ConnectionDAO {
 
 		} catch (Exception e) {
 			if (e.getMessage().contains("ORA-02292"))
-				System.out.println("Ce group possede des articles, suppression impossible !"
+				System.out.println("Ce absence possede des articles, suppression impossible !"
 						         + " Supprimer d'abord ses articles ou utiiser la méthode de suppression avec articles.");
 			else
 				e.printStackTrace();
@@ -177,17 +185,17 @@ public class AbsenceDAO extends ConnectionDAO {
 
 
 	/**
-	 * Permet de recuperer un group a partir de sa reference
+	 * Permet de recuperer un absence a partir de sa reference
 	 * 
-	 * @param reference la reference du group a recuperer
-	 * @return le group trouve;
-	 * 			null si aucun group ne correspond a cette reference
+	 * @param reference la reference du absence a recuperer
+	 * @return le absence trouve;
+	 * 			null si aucun absence ne correspond a cette reference
 	 */
-	public Group get(int id) {
+	public Absence get(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Group returnValue = null;
+		Absence returnValue = null;
 		
 
 		// connexion a la base de donnees
@@ -200,20 +208,27 @@ public class AbsenceDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM gestionnaire WHERE groupe_number= ?");
+			ps = con.prepareStatement("SELECT absence.idstudent, absence.idabsence,absence_type.nom AS type,absence.dure,absence.jour\r\n"
+					+ "FROM absence_type INNER JOIN absence \r\n"
+					+ "ON absence_type.idabsence_type= absence.idabsence_type\r\n"
+					+ "INNER JOIN student \r\n"
+					+ "ON absence.idstudent= student.idstudent\r\n"
+					+ "WHERE absence.idabsence=1?");
 			ps.setInt(1, id);
 			
-
-
+			
 			// on execute la requete
 			// rs contient un pointeur situe juste avant la premiere ligne retournee
 			rs = ps.executeQuery();
 			
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
-				returnValue = new Group(rs.getInt("GROUPE_NUMBER"),	     
-									       rs.getInt("CAPACITY"));
-				returnValue.display();
+				returnValue = new Absence( rs.getInt("IDABSENCE"),
+					       rs.getString("type"),
+					       rs.getString("IDSTUDENT"),
+					       rs.getString("jour"),
+					       rs.getString("dure"));
+				
 			}
 			
 		} catch (Exception ee) {
@@ -243,28 +258,37 @@ public class AbsenceDAO extends ConnectionDAO {
 	}
 
 	/**
-	 * Permet de recuperer tous les groups stockes dans la table group
+	 * Permet de recuperer tous les absences stockes dans la table absence
 	 * 
-	 * @return une ArrayList de group
+	 * @return une ArrayList de absence
 	 */
-	public ArrayList<Group> getList() {
+	public ArrayList<Absence> getListAbsenceStudent(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ArrayList<Group> returnValue = new ArrayList<Group>();
+		ArrayList<Absence> returnValue = new ArrayList<Absence>();
 		
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM groupe ORDER BY groupe_number");
-
+			ps = con.prepareStatement("SELECT absence.idstudent, absence.idabsence,absence_type.nom AS type,absence.dure,absence.jour\r\n"
+					+ "FROM absence_type INNER JOIN absence \r\n"
+					+ "ON absence_type.idabsence_type= absence.idabsence_type\r\n"
+					+ "INNER JOIN student \r\n"
+					+ "ON absence.idstudent= student.idstudent\r\n"
+					+ "WHERE absence.idstudent=?");
+			
+			ps.setInt(1, id);
 			// on execute la requete
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
 				
-				returnValue.add(new Group(rs.getInt("groupe_number"),	     
-					       rs.getInt("CAPACITY")));
+				returnValue.add(new Absence(rs.getInt("IDABSENCE"),
+					       rs.getString("type"),
+					       rs.getString("IDSTUDENT"),
+					       rs.getString("jour"),
+					       rs.getString("dure")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -299,10 +323,5 @@ public class AbsenceDAO extends ConnectionDAO {
 	 */
 	
 	
-	 public static void main(String[] args) throws SQLException {
-	//	int returnValue;
-		AbsenceDAO groupDAO = new AbsenceDAO();
-			groupDAO.getList().get(0).display();
-			
-			}
+	 
 	 }

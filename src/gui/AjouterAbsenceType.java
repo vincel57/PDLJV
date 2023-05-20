@@ -43,7 +43,7 @@ public class AjouterAbsenceType {
 			}
 		});
 	}
-
+		
 	/**
 	 * Create the application.
 	 */

@@ -250,7 +250,7 @@ public class SessionDAO extends ConnectionDAO {
 			ee.printStackTrace();
 		} finally {
 			// fermeture du ResultSet, du PreparedStatement et de la Connexion
-			try {
+			try { 
 				if (rs != null) {
 					rs.close();
 				}
