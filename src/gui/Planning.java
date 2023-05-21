@@ -120,7 +120,7 @@ public class Planning {
 				Session se= new Session(4,"08h","9h","17/05/2001","D1287","rhhh","TP","ATS","CABOT",2);
 
 				JPanel panel = new JPanel();
-				GridLayout gl_panel = new GridLayout(5, 1);
+				GridLayout gl_panel = new GridLayout(8, 1);
 				gl_panel.setVgap(15);
 				panel.setLayout(gl_panel);
 				for (int i = 0; i < listSession.size(); i++) {
@@ -162,6 +162,8 @@ public class Planning {
 		
 
 		
+		
+	
 		
 		
 		

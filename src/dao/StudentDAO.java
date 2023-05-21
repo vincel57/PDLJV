@@ -224,12 +224,7 @@ public class StudentDAO extends ConnectionDAO {
 			rs = ps.executeQuery();
 			// passe a la premiere (et unique) ligne retournee
 			if (rs.next()) {
-				if(rs.getInt("idsector")==2) {
-					sector = "Apprenti";
-				}
-				else if(rs.getInt("idsector")==1) {
-					sector = "Classique";
-				}
+				
 				System.out.println("ID"+rs.getInt("IDSTUDENT"));
 				returnValue = new Student(rs.getInt("IDSTUDENT"),
 									       rs.getString("Lastname"),
@@ -237,7 +232,7 @@ public class StudentDAO extends ConnectionDAO {
 									       rs.getString("mail"),
 									       rs.getString("MDP"),
 									       rs.getInt("groupe_number"),
-									       sector);
+									       rs.getString("sector"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

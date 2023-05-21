@@ -117,6 +117,9 @@ public class AcceuilStudent {
 		btnAnticiper.setBackground(new Color(224, 255, 255));
 		btnAnticiper.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				JustificatoryGUI jg= new JustificatoryGUI(student);
+
 			}
 		});
 		btnAnticiper.setBounds(512, 22, 89, 23);

@@ -43,13 +43,13 @@ public class JustificatoryDAO extends ConnectionDAO {
 			// a communiquer dans l'insertion.
 			// les getters permettent de recuperer les valeurs des attributs souhaites
 			
-			ps = con.prepareStatement("INSERT INTO justificatory (idjustificatory,dates,validity,link,idstudent) VALUES(?,?,?,?,?)");
+			ps = con.prepareStatement("INSERT INTO justificatory (idjustificatory,dates,validity,lien,idstudent) VALUES(seq_justificatory.nextVal,?,?,?,?)");
 
-			ps.setInt(1, justificatory.getIdjustificatory());
-			ps.setString(2, justificatory.getDate());
-			ps.setString(3, justificatory.getValidity());
-			ps.setString(4, justificatory.getLink());
-			ps.setString(5, justificatory.getStudent());
+	
+			ps.setString(1, justificatory.getDate());
+			ps.setString(2, justificatory.getValidity());
+			ps.setString(3, justificatory.getLink());
+			ps.setString(4, justificatory.getStudent());
 
 		
 			
@@ -105,7 +105,7 @@ public class JustificatoryDAO extends ConnectionDAO {
 			// preparation de l'instruction SQL, chaque ? represente une valeur
 			// a communiquer dans la modification.
 			// les getters permettent de recuperer les valeurs des attributs soctuhaites
-			ps = con.prepareStatement("UPDATE justificatory set  dates = ?, validity = ?, link = ?,idstudent = ?,WHERE idjustificatory = ?");
+			ps = con.prepareStatement("UPDATE justificatory set  dates = ?, validity = ?, lien = ?,idstudent = ?,WHERE idjustificatory = ?");
 			ps.setString(2, justificatory.getDate());
 			ps.setString(3, justificatory.getValidity());
 			ps.setString(4, justificatory.getLink());
@@ -215,7 +215,9 @@ public class JustificatoryDAO extends ConnectionDAO {
 			
 			else
 				System.out.println("CONNECTION FAILED");
-			ps = con.prepareStatement("SELECT * FROM justificatory WHERE idjustificatory = ? ");
+			ps = con.prepareStatement("SELECT lien, dates,validity\r\n"
+					+ "FROM justificatory\r\n"
+					+ "WHERE idstudent=? ");
 			ps.setInt(1, id);
 
 			// on execute la requete
@@ -226,8 +228,8 @@ public class JustificatoryDAO extends ConnectionDAO {
 				returnValue = new Justificatory(rs.getInt("idjustificatory"),
 									       rs.getString("dates"),
 									       rs.getString("validity"),
-									       rs.getString("link"),
-									       rs.getString("student"));
+									       rs.getString("lien"),
+									       rs.getString("idstudent"));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();
@@ -260,7 +262,7 @@ public class JustificatoryDAO extends ConnectionDAO {
 	 * 
 	 * @return une ArrayList de eleve
 	 */
-	public ArrayList<Justificatory> getList() {
+	public ArrayList<Justificatory> getList(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -270,19 +272,22 @@ public class JustificatoryDAO extends ConnectionDAO {
 		// connexion a la base de donnees
 		try {
 			con = DriverManager.getConnection(URL, LOGIN, PASS);
-			ps = con.prepareStatement("SELECT * FROM justificatory");
-
+			ps = con.prepareStatement("SELECT *\r\n"
+					+ "FROM justificatory\r\n"
+					+ "WHERE idstudent=?");
+			
+			ps.setInt(1, id);
 			// on execute la requete
 			rs = ps.executeQuery();
 			// on parcourt les lignes du resultat
 			while (rs.next()) {
 				
 				
-				returnValue.add(new Justificatory(rs.getInt("idjustificatory"),
+				returnValue.add(new Justificatory(rs.getInt("IDJUSTIFICATORY"),
 					       rs.getString("dates"),
 					       rs.getString("validity"),
-					       rs.getString("link"),
-					       rs.getString("student")));
+					       rs.getString("lien"),
+					       rs.getString("idstudent")));
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

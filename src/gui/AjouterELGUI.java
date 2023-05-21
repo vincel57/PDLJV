@@ -101,7 +101,7 @@ public class AjouterELGUI {
 				System.out.println(Integer.parseInt(List_groups.getSelectedItem().toString()));
 				student.setGroup(Integer.parseInt(List_groups.getSelectedItem().toString()));
 				String mail= student.getFirstName()+"."+student.getName()+"@groupe-esigelec.org";
-				student.setMail(mail);
+				student.setMail(mail.toLowerCase());
 				// Method to generate a random alphanumeric password of a specific length
 				int len = 5;
 

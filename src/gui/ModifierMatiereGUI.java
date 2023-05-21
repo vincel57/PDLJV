@@ -172,8 +172,6 @@ public class ModifierMatiereGUI {
 		CourseAddButton.setBounds(101, 274, 216, 23);
 		choicePnl.add(CourseAddButton);
 
-	
-
 
 		JLabel examTimeLabel = new JLabel("examtime");
 		examTimeLabel.setBounds(114, 107, 46, 14);
@@ -182,9 +180,7 @@ public class ModifierMatiereGUI {
 		JLabel teacherLabel = new JLabel("Teacher");
 		teacherLabel.setBounds(114, 240, 46, 14);
 		choicePnl.add(teacherLabel);
-		
-		
-		
+
 		JLabel tdTimeLabel = new JLabel("tdtime");
 		tdTimeLabel.setBounds(114, 138, 46, 14);
 		choicePnl.add(tdTimeLabel);
@@ -207,7 +203,7 @@ public class ModifierMatiereGUI {
 		JLabel amphiTimeLabel = new JLabel("AmphiTime");
 		amphiTimeLabel.setBounds(101, 205, 59, 14);
 		choicePnl.add(amphiTimeLabel);
-		
+			
 	
 
 	}
